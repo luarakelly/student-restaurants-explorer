@@ -44,7 +44,7 @@ src/
 ├── components/     # Reusable UI elements (cards, navbar, map pins, etc.)
 ├── services/       # API handling (auth, restaurants, user, routing)
 ├── utils/          # Shared helpers (storage, geolocation)
-└── styles/         # Organized CSS by component and page
+└── styles/         # Organized CSS by page
 ```
 
 ---
@@ -53,7 +53,7 @@ src/
 
 | Concept | Description |
 |--------|-------------|
-| **Client-side routing** | navigation without full page reloads |
+| **Client-side routing** | Navigation without full page reloads |
 | **Separation of concerns** | Clean split between views, services, and utilities |
 | **Local storage** | Persistent preferences and session handling |
 | **Geolocation** | Nearest restaurant detection based on user position |
@@ -85,7 +85,7 @@ Designed primarily for **students** who want a fast and simple way to:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/student-restaurant-explorer.git
+git clone https://github.com/luarakelly/student-restaurant-explorer.git
 
 # Navigate into the project
 cd student-restaurant-explorer
