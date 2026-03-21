@@ -1,22 +1,88 @@
-export function Router() {
+/**
+ * Router.js — SPA router and shared navigation configuration
+ *
+ * Provides:
+ * 1. Route definitions used by the Router, Navbar, and BottomNav.
+ * 2. Hash-based navigation for SPA.
+ * 3. Subscriber system for components to update on route changes.
+ */
+function Router() {
   /**
-  * Route definitions.
-  * Each route maps a hash pattern to a page loader function.
-  *
-  * @type {Array<{path: string, load: Function}>}
-  */
+   * Route definitions — Each route object may include:
+   *   - path: the hash pattern for the route (e.g., "#/restaurants")
+   *   - load: async function that dynamically imports the page module
+   *   - labelKey: string key used in navigation labels
+   *   - icon: icon filename for BottomNav (optional)
+   *   - showInNav: boolean flag to include in Navbar/BottomNav
+   *
+   * @type {Array<{
+   *   path: string,
+   *   load: Function,
+   *   labelKey?: string,
+   *   icon?: string,
+   *   showInNav?: boolean
+   * }>}
+   */
   const routes = [
-    { path: "#/", load: () => import("./pages/Home.js") },
-    { path: "#/restaurants", load: () => import("./pages/Restaurants.js") },
-    { path: "#/map", load: () => import("./pages/Map.js") },
+    { 
+      path: "#/",           
+      labelKey: "Home",        
+      icon: "nav-home",    
+      showInNav: true,  
+      load: () => import("./pages/Home.js") 
+    },
+    { 
+      path: "#/restaurants",
+      labelKey: "Restaurants", 
+      icon: "nav-list",   
+      showInNav: true,  
+      load: () => import("./pages/Restaurants.js") 
+    },
+    { 
+      path: "#/map",        
+      labelKey: "Map",         
+      icon: "nav-map",    
+      showInNav: true,  
+      load: () => import("./pages/Map.js") 
+    },
+    { 
+      path: "#/profile",    
+      labelKey: "Profile",     
+      icon: "nav-profile",
+      showInNav: true,  
+      load: () => import("./pages/Profile.js") 
+    },
+    { 
+      path: "#/login",      
+      showInNav: false,           
+      load: () => import("./pages/Login.js") 
+    },
   ];
 
   /**
-  * Resolve the current hash to a matching route.
-  * Supports dynamic segments: #/restaurant?id=123
-  *
-  * @returns {object|null} Matching route or null
-  */
+   * Subscribers array — components that react to route changes.
+   * Each subscriber is a function that receives the current route object.
+   * @type {Array<function(object|null):void>}
+   */
+  const routeSubscribers = [];
+
+  /**
+   * Subscribe a component to route changes.
+   * Called whenever the route changes (hash change).
+   *
+   * @param {function(object|null):void} callback - function receiving the current route
+   */
+  const handleSubscribe = (callback) => {
+    if (typeof callback === "function") {
+      routeSubscribers.push(callback);
+    }
+  };
+
+  /**
+   * Resolve the current hash to a matching route object
+   *
+   * @returns {object|null} - Route object or null if no match
+   */
   const resolve = () => {
     const hash = window.location.hash || "#/";
     const path = hash.split("?")[0];
@@ -24,34 +90,46 @@ export function Router() {
   };
 
   /**
-  * Navigate to a new hash route programmatically.
-  *
-  * @param {string} hash - Target hash e.g. "#/restaurants"
-  */
+   * Handle a hash change: load the corresponding page and notify subscribers.
+   */
   const handleRoute = async () => {
     const app = document.getElementById("app");
     const route = resolve();
+
+    // Notify all subscribed components
+    routeSubscribers.forEach(subscriber => subscriber(route));
+
     if (!route) {
       app.innerHTML = "<p>404 — Page not found</p>";
       return;
     }
 
     try {
-      const module = await route.load();
-      await module.default(app);
+      const pageModule = await route.load();
+      await pageModule.default(app);
     } catch (err) {
-      console.error("Route load failed:", err);
+      console.error("Failed to load route:", err);
       app.innerHTML = "<p>Something went wrong loading this page.</p>";
     }
   };
 
   /**
-  * Initialise the router. Call once on app startup.
-  */
+   * Initialize the router. Sets up the hashchange listener and loads the initial route.
+   */
   const initRouter = () => {
     window.addEventListener("hashchange", handleRoute);
-    handleRoute();
+    handleRoute(); // load initial route
   };
 
-  return { initRouter };
+  return {
+    routes,
+    initRouter,
+    handleSubscribe,
+  };
 }
+
+/**
+ * Singleton router instance — shared across the entire app.
+ * Import this instead of calling Router() yourself.
+ */
+export const router = Router();
