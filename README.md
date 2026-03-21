@@ -44,7 +44,7 @@ src/
 ├── components/     # Reusable UI elements (cards, navbar, map pins, etc.)
 ├── services/       # API handling (auth, restaurants, user, routing)
 ├── utils/          # Shared helpers (storage, geolocation)
-└── styles/         # Organized CSS by component and page
+└── styles/         # Organized CSS by page
 ```
 
 ---
