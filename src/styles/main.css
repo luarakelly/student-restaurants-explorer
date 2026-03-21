@@ -143,7 +143,6 @@ a {
   color: var(--color-primary);
 }
 
-
 /* =================================================
    Responsive Behavior - Switch UI for mobile screens
    ================================================= */
@@ -159,7 +158,6 @@ a {
     display: flex;
   }
 }
-
 
 /* =========================
    Page Layout Container
