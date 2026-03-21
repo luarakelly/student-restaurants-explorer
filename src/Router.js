@@ -130,6 +130,5 @@ function Router() {
 
 /**
  * Singleton router instance — shared across the entire app.
- * Import this instead of calling Router() yourself.
  */
 export const router = Router();
