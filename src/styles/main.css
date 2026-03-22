@@ -1,177 +1,229 @@
 /* ============================================
-   CSS Reset - Normalize default browser styles
-   ============================================ */
+   RESET
+============================================ */
 *, *::before, *::after {
-  box-sizing: border-box; /* include padding & border in width */
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ==================================================================
-   Global Design - Define reusable variables (colors, spacing, fonts)
-   =================================================================*/
-
+/* ============================================
+   DESIGN SYSTEM
+============================================ */
 :root {
-  /* App palette colors */
-  --color-primary: #185FA5;
-  --color-primary-light: #E6F1FB;
+  /* COLORS pallet */
+  --color-primary: #c44c00;
+  --color-accent: #ffd166;
 
-   /* Text colors */
   --color-text: #1a1a1a;
-  --color-text-muted: #5F5E5A;
+  --color-text-muted: #6b6b6b;
 
-   /* Borders & backgrounds */
-  --color-border: rgba(0,0,0,0.12);
   --color-bg: #ffffff;
-  --color-bg-secondary: #f5f5f3;
+  --color-bg-nav: #f7ebd5c9;
+  --color-bg-soft: #fff7f0;
+  --color-border: rgba(0,0,0,0.08);
 
-  /* Border radius scale */
+  /* SPACING SCALE */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
+  /* RADIUS */
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
 
-  /* Typography */
+  /* TYPOGRAPHY */
   --font-sans: system-ui, -apple-system, sans-serif;
-  --font-mono: "Courier New", monospace;
+
+  /* NAV HEIGHTS */
+  --nav-height: 85px;
+  --bottom-nav-height: 64px;
 }
 
-/* =========================
-   Base Body Styles
-   ========================= */
+/* ============================================
+   BASE
+============================================ */
 body {
   font-family: var(--font-sans);
   color: var(--color-text);
   background: var(--color-bg);
-
-  min-height: 100vh; /* full viewport height */
+  min-height: 100vh;
 }
 
-/* =========================
-   Links
-   ========================= */
 a {
-  color: inherit;         /* inherit text color from parent */
-  text-decoration: none;  /* remove underline */
+  color: inherit;
+  text-decoration: none;
 }
 
-/* =========================
-   Navbar (Desktop Navigation)
-   ========================= */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* HOME — warm gradient */
+.bg--home {
+  background: radial-gradient(circle at 20% 30%, #ffd16633, transparent 40%),
+              radial-gradient(circle at 80% 70%, #c44c0033, transparent 40%);
+}
+
+/* RESTAURANTS — subtle texture */
+.bg--restaurants {
+  background: linear-gradient(180deg, #fff7f0 0%, #ffffff 100%);
+}
+
+/* MAP — calm neutral */
+.bg--map {
+  background: #f3efe9;
+}
+
+/* ============================================
+   LAYOUT SYSTEM
+============================================ */
+
+/* Main page wrapper */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+/* Prevent bottom nav overlap */
+.page--with-bottom-nav {
+  padding-bottom: calc(var(--bottom-nav-height) + var(--space-lg));
+}
+
+/* Responsive padding */
+@media (max-width: 768px) {
+  .page {
+    padding: var(--space-md);
+  }
+}
+
+/* ============================================
+   REUSABLE UI
+============================================ */
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--color-border);
+}
+
+/* Cards */
+.card {
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+}
+
+/* Grid helper */
+.grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+/* ============================================
+   NAVBAR (DESKTOP)
+============================================ */
 .navbar {
+  height: var(--nav-height);
+  background: var(--color-bg-nav);
+  backdrop-filter: blur(10px);
+  
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 12px 24px;
-  border-bottom: 0.5px solid var(--color-border);
-
-  background: var(--color-bg);
+  padding: 0 var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
 }
 
-/* Logo */
-.navbar__logo {
-  font-size: 15px;
-  font-weight: 500;
-}
-
-/* Navigation links container */
 .navbar__links {
   display: flex;
-  gap: 20px;
+  gap: var(--space-lg);
   list-style: none;
 }
 
-/* Individual links */
 .navbar__links a {
   display: flex;
   align-items: center;
   gap: 6px;
 
-  font-size: 13px;
+  font-size: 14px;
   color: var(--color-text-muted);
-  transition: color 0.15s ease;
 }
 
-/* Icon matches link color */
-.navbar__links a img {
-  opacity: 0.5;
-  transition: opacity 0.15s ease;
-}
-
-/* Active link (current page) */
 .navbar__links a.active {
   color: var(--color-primary);
 }
 
-.navbar__links a.active img {
-  opacity: 1;
-}
-
-/* =========================
-   Bottom Navigation (Tablet/Mobile)
-   ========================= */
+/* ============================================
+   BOTTOM NAV (MOBILE)
+============================================ */
 .bottom-nav {
-  display: none; /* hidden on desktop */
-
+  display: none;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  height: var(--bottom-nav-height);
 
-  border-top: 0.5px solid var(--color-border);
-  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-nav);
+  border-top: 1px solid var(--color-border);
 
   justify-content: space-around;
-  padding: 8px 0;
+  align-items: center;
 
-  z-index: 100; /* ensure it stays above content */
+  z-index: 100;
 }
 
-/* Individual tab */
 .bottom-nav__tab {
   display: flex;
-  flex-direction: column; /* icon above text */
+  flex-direction: column;
   align-items: center;
-  gap: 3px;
-
-  font-size: 10px;
+  font-size: 11px;
   color: var(--color-text-muted);
 }
 
-/* Active tab */
 .bottom-nav__tab.active {
   color: var(--color-primary);
 }
 
-/* =================================================
-   Responsive Behavior - Switch UI for mobile screens
-   ================================================= */
+/* ============================================
+   RESPONSIVE NAV SWITCH
+============================================ */
 @media (max-width: 768px) {
-  /* Hide desktop navigation */
-  .navbar__links,
-  .navbar__actions .btn {
+  .navbar__links {
     display: none;
   }
 
-  /* Show mobile bottom nav */
   .bottom-nav {
     display: flex;
-  }
-}
-
-/* =========================
-   Page Layout Container
-   ========================= */
-.page {
-  padding: 24px;
-
-  max-width: 1100px; /* limit content width */
-  margin: 0 auto;    /* center horizontally */
-}
-
-/* Smaller padding on mobile */
-@media (max-width: 768px) {
-  .page {
-    padding: 16px;
   }
 }
