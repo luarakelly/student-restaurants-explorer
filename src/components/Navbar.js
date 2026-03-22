@@ -1,4 +1,4 @@
-import { router } from "../../Router.js"; // shared singleton
+import { router } from "../Router.js"; // shared singleton
 
 const navRoutes = router.routes.filter(route => route.showInNav);
 

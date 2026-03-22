@@ -1,4 +1,4 @@
-import { router } from "../../Router.js"; // shared singleton — no Router() call
+import { router } from "../Router.js"; // shared singleton — no Router() call
 
 const bottomNavRoutes = router.routes.filter(route => route.showInNav);
 
