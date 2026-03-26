@@ -48,7 +48,7 @@ export function RestaurantCard(r, active, favorited, nearest = false) {
         <button class="btn btn--primary btn-menu" data-id="${r._id}">
           &#127869; VIEW MENU
         </button>
-        
+        <a
           class="btn btn--secondary btn--route"
           target="_blank"
           rel="noopener noreferrer"
