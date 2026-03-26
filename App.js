@@ -1,6 +1,6 @@
 import { router } from "./src/Router.js"; // take the singleton
-import { renderNavbar } from "./src/components/shared/Navbar.js";
-import { renderBottomNav } from "./src/components/shared/BottomNav.js";
+import { renderNavbar } from "./src/components/Navbar.js";
+import { renderBottomNav } from "./src/components/BottomNav.js";
 
 /**
  * Application entry point.
