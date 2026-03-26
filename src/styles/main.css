@@ -1,57 +1,100 @@
 /* ============================================
-   CSS Reset - Normalize default browser styles
-   ============================================ */
+   IMPORTS (FONTS)
+============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap');
+
+/* ============================================
+   RESET
+============================================ */
 *, *::before, *::after {
-  box-sizing: border-box; /* include padding & border in width */
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ==================================================================
-   Global Design - Define reusable variables (colors, spacing, fonts)
-   =================================================================*/
-
+/* ============================================
+   DESIGN SYSTEM
+============================================ */
 :root {
-  /* App palette colors */
-  --color-primary: #185FA5;
-  --color-primary-light: #E6F1FB;
+  /* Colors */
+  --color-primary: #9c3f00;
+  --color-primary-strong: #f66700;
+  --color-primary-soft: #c94f00;
 
-   /* Text colors */
-  --color-text: #1a1a1a;
-  --color-text-muted: #5F5E5A;
+  --color-secondary: #006666;
+  --color-secondary-soft: #8dedec;
 
-   /* Borders & backgrounds */
-  --color-border: rgba(0,0,0,0.12);
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f5f5f3;
+  --color-tertiary: #386631;
+  --color-tertiary-soft: #b9eeab;
 
-  /* Border radius scale */
+  --color-text: #322e25;
+  --color-text-muted: #605b50;
+  --color-text-inverse: #fff0ea;
+
+  --color-bg: #fef6e7;
+  --color-bg-soft: #f8f0e0;
+  --color-bg-elevated: #ffffff;
+
+  --color-bg-nav: rgba(254, 246, 231, 0.96);
+
+  --color-surface: #fef6e7;
+  --color-surface-low: #f8f0e0;
+  --color-surface-mid: #f0e7d6;
+  --color-surface-high: #eae2d0;
+
+  --color-border: #cfc8ba;
+  --color-border-soft: rgba(50, 46, 37, 0.08);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
+  /* Radius */
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 
   /* Typography */
-  --font-sans: system-ui, -apple-system, sans-serif;
-  --font-mono: "Courier New", monospace;
+  --font-headline: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Be Vietnam Pro', sans-serif;
+
+  /* Nav */
+  --nav-height: 55px;
+  --bottom-nav-height: 60px;
 }
 
-/* =========================
-   Base Body Styles
-   ========================= */
+/* ============================================
+   BASE
+============================================ */
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   color: var(--color-text);
-  background: var(--color-bg);
-
-  min-height: 100vh; /* full viewport height */
+  background: var(--color-surface);
+  min-height: 100vh;
+  overflow: hidden;
 }
 
-/* =========================
-   Links
-   ========================= */
+h1, h2, h3, h4 {
+  font-family: var(--font-headline);
+}
+
 a {
-  color: inherit;         /* inherit text color from parent */
-  text-decoration: none;  /* remove underline */
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================
+   APP SHELL
+============================================ */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* =========================
