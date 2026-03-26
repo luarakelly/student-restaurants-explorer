@@ -1,3 +1,10 @@
+/**
+ * Renders the search box and filter controls HTML.
+ * Derives city and company options dynamically from the restaurants data.
+ *
+ * @param {Array<object>} restaurants - The full list of restaurant objects.
+ * @returns {string} HTML string for the search and filter UI.
+ */
 export function SearchBox(restaurants) {
   const cities = [...new Set(restaurants.map(r => r.city))];
   const companies = [...new Set(restaurants.map(r => r.company))];
@@ -40,6 +47,18 @@ export function SearchBox(restaurants) {
   `;
 }
 
+/**
+ * Binds event listeners to the search and filter controls.
+ * Calls onChange immediately with the initial filter state,
+ * then again whenever any filter value changes.
+ *
+ * @param {HTMLElement} app - The root app element to query controls from.
+ * @param {function(filters: object): void} onChange - Callback invoked with the current filter state.
+ * @param {string}  onChange.filters.search    - The current search query.
+ * @param {string}  onChange.filters.city      - The selected city, or "" for all.
+ * @param {string}  onChange.filters.company   - The selected company, or "" for all.
+ * @param {boolean} onChange.filters.favorites - Whether to show favorites only.
+ */
 export function bindSearchFiltersEvent(app, onChange) {
   const searchEl = app.querySelector("#search");
   const cityEl = app.querySelector("#city-filter");
@@ -49,6 +68,9 @@ export function bindSearchFiltersEvent(app, onChange) {
 
   let showFavorites = false;
 
+  /**
+   * Collects the current state of all filter controls and fires onChange.
+   */
   function emit() {
     onChange({
       search: searchEl.value.trim(),
@@ -58,30 +80,25 @@ export function bindSearchFiltersEvent(app, onChange) {
     });
   }
 
-  // Input events
   searchEl.addEventListener("input", emit);
   cityEl.addEventListener("change", emit);
   companyEl.addEventListener("change", emit);
 
-  // Favorites toggle
   favBtn.addEventListener("click", () => {
     showFavorites = !showFavorites;
     favBtn.classList.toggle("active");
     emit();
   });
 
-  // Reset (All)
   allBtn.addEventListener("click", () => {
     searchEl.value = "";
     cityEl.value = "";
     companyEl.value = "";
     showFavorites = false;
-
     favBtn.classList.remove("active");
-
     emit();
   });
 
-  // Initial emit
+  // Trigger an initial emit so the list renders with the default (empty) filters.
   emit();
 }
