@@ -1,4 +1,4 @@
-export function SearchBar(restaurants) {
+export function SearchBox(restaurants) {
   const cities = [...new Set(restaurants.map(r => r.city))];
   const companies = [...new Set(restaurants.map(r => r.company))];
 
@@ -38,4 +38,50 @@ export function SearchBar(restaurants) {
 
     </div>
   `;
+}
+
+export function bindSearchFiltersEvent(app, onChange) {
+  const searchEl = app.querySelector("#search");
+  const cityEl = app.querySelector("#city-filter");
+  const companyEl = app.querySelector("#company-filter");
+  const favBtn = app.querySelector("#filter-fav");
+  const allBtn = app.querySelector("#filter-all");
+
+  let showFavorites = false;
+
+  function emit() {
+    onChange({
+      search: searchEl.value.trim(),
+      city: cityEl.value,
+      company: companyEl.value,
+      favorites: showFavorites
+    });
+  }
+
+  // Input events
+  searchEl.addEventListener("input", emit);
+  cityEl.addEventListener("change", emit);
+  companyEl.addEventListener("change", emit);
+
+  // Favorites toggle
+  favBtn.addEventListener("click", () => {
+    showFavorites = !showFavorites;
+    favBtn.classList.toggle("active");
+    emit();
+  });
+
+  // Reset (All)
+  allBtn.addEventListener("click", () => {
+    searchEl.value = "";
+    cityEl.value = "";
+    companyEl.value = "";
+    showFavorites = false;
+
+    favBtn.classList.remove("active");
+
+    emit();
+  });
+
+  // Initial emit
+  emit();
 }
