@@ -1,7 +1,7 @@
 /**
  * @fileoverview Discovery page — owns all state for the restaurant list,
- * search filters, and (future) map. Composes SearchBox and RestaurantCard
- * components and wires them together.
+ * search filters, and map. Composes SearchBox, RestaurantCard, MapPanel,
+ * MenuCard and Modal components and wires them together.
  */
 
 import { restaurantsData } from "./mockupData/restaurantsData.js";
@@ -30,6 +30,9 @@ export default function render(app) {
   /** @type {Set<string>} Set of favorited restaurant _ids. */
   let favorites = new Set();
 
+  /** @type {boolean} Whether the mobile map view is active. */
+  let showMap = false;
+
   /**
    * Current filter state. Updated by bindSearchFiltersEvent on every change.
    *
@@ -43,23 +46,62 @@ export default function render(app) {
   };
 
   // ─── Layout ───────────────────────────────────────────────────────────────
+  // MapPanel() renders a slot container only — the actual Leaflet node is
+  // injected into the correct slot by mapInstance.mountTo() after init.
 
   app.innerHTML = `
     <div class="discovery">
       <aside class="sidebar">
         <div id="header"></div>
         <div id="list" class="discovery-list custom-scrollbar"></div>
+        <div id="map-mobile-wrap" class="discovery-map-mobile">
+          ${MapPanel()}
+        </div>
       </aside>
       <section class="content">
         ${MapPanel()}
       </section>
     </div>
+    <div class="view-toggle">
+      <button id="view-toggle-btn" class="view-toggle__btn">
+        &#128506; Map
+      </button>
+    </div>
   `;
 
   const header = app.querySelector("#header");
   const list = app.querySelector("#list");
+  const mapMobileWrap = app.querySelector("#map-mobile-wrap");
+  const desktopContent = app.querySelector(".content");
+  const toggleBtn = app.querySelector("#view-toggle-btn");
 
   header.innerHTML = SearchBox(restaurants);
+
+  // ─── Toggle ───────────────────────────────────────────────────────────────
+
+  /**
+   * Switches between list and map view on mobile by moving the single map
+   * instance between the mobile and desktop slots.
+   * On desktop the map always stays in .content and is unaffected.
+   */
+  function applyToggle() {
+    list.style.display = showMap ? "none" : "";
+    mapMobileWrap.style.display = showMap ? "flex" : "none";
+    toggleBtn.innerHTML = showMap ? "&#128203; List" : "&#128506; Map";
+
+    if (!mapInstance) return; // guard — map not yet initialised
+
+    if (showMap) {
+      mapInstance.mountTo(mapMobileWrap.querySelector("#map-slot"));
+    } else {
+      mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
+    }
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    showMap = !showMap;
+    applyToggle();
+  });
 
   // ─── Filtering ────────────────────────────────────────────────────────────
 
@@ -107,6 +149,23 @@ export default function render(app) {
       : `<p class="list-empty">No restaurants found.</p>`;
   }
 
+  // ─── Menu modal helper ────────────────────────────────────────────────────
+
+  /**
+   * Opens the menu modal for a given restaurant id.
+   * Shared by both the list card and the map popup.
+   *
+   * @param {string} id - The restaurant _id.
+   */
+  function openMenuFor(id) {
+    const restaurant = restaurants.find(r => r._id === id);
+    const overlay = openModal(
+      ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
+      MenuCard(restaurant, dailyMenuData, weeklyMenusData)
+    );
+    bindMenuCardTabs(overlay, restaurant._id, dailyMenuData, weeklyMenusData);
+  }
+
   // ─── Event registers ──────────────────────────────────────────────────────
 
   // Delegated once on the list container — no need to re-bind after re-renders.
@@ -124,39 +183,40 @@ export default function render(app) {
     },
 
     /** @param {string} id - The _id of the restaurant whose menu was requested. */
-    onMenu: (id) => {
-      const restaurant = restaurants.find(r => r._id === id);
-
-      const overlay = openModal(
-        ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
-        MenuCard(restaurant, dailyMenuData, weeklyMenusData)
-      );
-
-      bindMenuCardTabs(overlay, restaurant._id, dailyMenuData, weeklyMenusData);
-    }
+    onMenu: (id) => openMenuFor(id)
   });
 
-  // Fires immediately with default filters - triggers the initial renderList.
+  // Fires immediately with default filters — triggers the initial renderList.
   bindSearchFiltersEvent(app, (nextFilters) => {
     filters = nextFilters;
     renderList();
   });
 
-  // after layout, bind the map — passes same index=0 nearest logic
+  // ─── Map init ─────────────────────────────────────────────────────────────
+  // Initialise after layout so the body-attached map node has a real size.
+  // Mount immediately into the desktop slot — mobile uses it only when toggled.
+
+  let mapInstance;
+
   requestAnimationFrame(() => {
-    bindMapPanel(restaurants, {
+    mapInstance = bindMapPanel(restaurants, {
       onMarkerClick: (id) => {
         activeId = id;
         renderList();
+
+        // On mobile, switch back to list so the highlighted card is visible.
+        if (showMap) {
+          showMap = false;
+          applyToggle();
+        }
       },
-      onMenu: (id) => {
-        const restaurant = restaurants.find(r => r._id === id);
-        const overlay = openModal(
-          ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
-          MenuCard(restaurant, dailyMenuData, weeklyMenusData)
-        );
-        bindMenuCardTabs(overlay, restaurant._id, dailyMenuData, weeklyMenusData);
-      }
+      onMenu: (id) => openMenuFor(id)
     });
+
+    // Default mount: desktop slot.
+    mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
+
+    // Now safe to apply the initial toggle state.
+    applyToggle();
   });
 }
