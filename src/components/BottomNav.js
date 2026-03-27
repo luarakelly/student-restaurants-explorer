@@ -1,31 +1,40 @@
-import { router } from "../Router.js"; // shared singleton — no Router() call
+import { router } from "../Router.js";
 
+/** Routes that should appear in the bottom navigation bar. */
 const bottomNavRoutes = router.routes.filter(route => route.showInNav);
 
 /**
- * Render the mobile bottom navigation bar into a container.
+ * Renders the mobile bottom navigation bar into a container element.
+ * Re-renders automatically when the route changes to update the active state.
  *
- * @param {HTMLElement} container - The element where the bottom nav will be rendered
+ * @param {HTMLElement} container - The element to render the bottom nav into.
  */
 export const renderBottomNav = (container) => {
   /**
-   * Internal render function — updates active tab based on current route
+   * Builds and injects the nav HTML based on the current route.
    */
   const renderNav = () => {
     const currentHash = window.location.hash.split("?")[0] || "#/";
 
     container.innerHTML = `
       <nav class="bottom-nav">
-        ${bottomNavRoutes.map(route => `
-          <a href="${route.path}" class="bottom-nav__tab ${currentHash === route.path ? "active" : ""}">
-            <img src="src/assets/icons/${route.icon}.svg" width="20" height="20" alt="${route.labelKey}" />
-            <span>${route.labelKey}</span>
-          </a>
-        `).join("")}
+        ${bottomNavRoutes.map(route => {
+          const isActive = currentHash === route.path;
+
+          return `
+            <a 
+              href="${route.path}" 
+              class="nav__item nav__item--mobile ${isActive ? "is-active" : ""}"
+            >
+              <img src="src/assets/icons/${route.icon}.svg" width="20" height="20" alt="${route.labelKey}" />
+              <span class="nav__label">${route.labelKey}</span>
+            </a>
+          `;
+        }).join("")}
       </nav>
     `;
   };
 
   renderNav();
-  router.handleSubscribe(renderNav); // subscribes to the shared router
+  router.handleSubscribe(renderNav);
 };

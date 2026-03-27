@@ -1,0 +1,200 @@
+/* ============================================
+   TAB TOGGLE
+============================================ */
+.menu-modal__tabs {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-md) var(--space-lg) var(--space-sm);
+  flex-shrink: 0;
+}
+
+.menu-tabs-pill {
+  display: flex;
+  background: var(--color-surface-high);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.menu-tab {
+  padding: 8px 24px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.menu-tab.active {
+  background: var(--color-primary-soft);
+  color: white;
+  box-shadow: 0 2px 8px rgba(201, 79, 0, 0.25);
+}
+
+/* ============================================
+   SCROLLABLE BODY
+============================================ */
+.menu-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-sm) var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* ============================================
+   MENU ITEM CARD
+============================================ */
+.menu-item-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  box-shadow: 0 1px 4px rgba(50, 46, 37, 0.05);
+  position: relative;
+}
+
+.menu-item-card__emoji {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--color-surface-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.menu-item-card__body {
+  flex: 1;
+  min-width: 0;
+  padding-right: 28px;
+}
+
+.menu-item-card__name {
+  font-family: var(--font-headline);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+/* ============================================
+   PRICES
+============================================ */
+.menu-item-card__prices {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: 6px;
+}
+
+.price-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.price-group__label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.price-group__value {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-headline);
+  color: var(--color-primary);
+}
+
+/* ============================================
+   DIET BADGES
+============================================ */
+.menu-item-card__badges {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 3px;
+}
+
+.diet-badge {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  font-family: var(--font-headline);
+  color: white;
+}
+
+.diet-badge--G  { background: var(--color-tertiary); }
+.diet-badge--M  { background: var(--color-secondary); }
+.diet-badge--L  { background: #b07d00; }
+.diet-badge--VE { background: var(--color-tertiary-soft); color: var(--color-tertiary); }
+
+/* ============================================
+   WEEKLY DAY HEADER
+============================================ */
+.menu-day {
+  display: flex;           
+  flex-direction: column;  
+  gap: var(--space-sm);    
+}
+
+.menu-day + .menu-day {
+  margin-top: var(--space-sm);  
+}
+
+.menu-day__title {
+  font-family: var(--font-headline);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-left: 2px;
+}
+
+/* ============================================
+   FOOTER
+============================================ */
+.menu-modal__footer {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--color-border-soft);
+  flex-shrink: 0;
+}
+
+.menu-modal__footer .btn {
+  flex: 1;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 12px;
+  font-size: 13px;
+}
+
+.btn--outline-teal {
+  background: transparent;
+  color: var(--color-secondary);
+  border: 2px solid var(--color-secondary);
+}
+
+.btn--outline-teal:hover {
+  background: var(--color-secondary);
+  color: white;
+}

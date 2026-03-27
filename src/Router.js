@@ -32,18 +32,11 @@ function Router() {
       load: () => import("./pages/Home.js") 
     },
     { 
-      path: "#/restaurants",
-      labelKey: "Restaurants", 
+      path: "#/Discovery",
+      labelKey: "Discovery", 
       icon: "nav-list",   
       showInNav: true,  
-      load: () => import("./pages/Restaurants.js") 
-    },
-    { 
-      path: "#/map",        
-      labelKey: "Map",         
-      icon: "nav-map",    
-      showInNav: true,  
-      load: () => import("./pages/Map.js") 
+      load: () => import("./pages/Discovery.js") 
     },
     { 
       path: "#/profile",    

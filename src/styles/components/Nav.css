@@ -1,0 +1,162 @@
+/* ============================================
+   SHARED NAV ITEM
+============================================ */
+.nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+/* Label */
+.nav__label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Active state for underline */
+.nav__item.is-active {
+  color: var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+/* ============================================
+   NAVBAR (DESKTOP)
+============================================ */
+.navbar {
+  height: var(--nav-height);
+  background: var(--color-bg-nav);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 var(--space-lg);
+  z-index: 100;
+  position: relative;
+}
+
+/* Brand */
+.navbar__brand {
+  font-family: var(--font-headline);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-primary);
+
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Hover */
+.navbar__brand:hover {
+  color: var(--color-primary-strong);
+}
+
+/* Nav container */
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.nav__item--desktop {
+  padding: 6px 14px;
+  color: var(--color-text-muted);
+  border-bottom: 3px solid transparent; 
+  transition: all 0.2s ease;
+}
+
+.nav__item--desktop:hover {
+  color: var(--color-primary);
+}
+
+.nav__item--desktop.is-active {
+  color: var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+/* Actions */
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.navbar__icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-surface-high);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.navbar__icon-btn:hover {
+  background: var(--color-surface-mid);
+}
+
+/* ============================================
+   BOTTOM NAV (MOBILE)
+============================================ */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-nav-height);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-nav);
+
+  justify-content: space-around;
+  align-items: center;
+
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+/* Mobile nav items */
+.nav__item--mobile {
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11px;
+  padding: 6px 10px;
+  color: var(--color-text-muted);
+  border-bottom: 3px solid transparent; 
+  transition: all 0.2s ease;
+}
+
+.nav__item--mobile.is-active {
+  color: var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+/* ============================================
+   RESPONSIVE NAV SWITCH
+============================================ */
+@media (max-width: 650px) {
+  .navbar__nav {
+    display: none;
+  }
+
+  .bottom-nav {
+    display: flex;
+  }
+
+  body {
+    overflow: auto;
+  }
+}

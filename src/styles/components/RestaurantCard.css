@@ -1,0 +1,124 @@
+/* ============================================
+   RESTAURANT CARD
+============================================ */
+.restaurant-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.15s ease;
+  padding: 14px var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border-soft);
+  background: var(--color-bg-elevated);
+  box-shadow: 0 2px 6px rgba(50,46,37,0.06);
+}
+
+.restaurant-card:hover {
+  box-shadow: 0 6px 16px rgba(50,46,37,0.11);
+}
+
+/* NEAREST TAG */
+.nearest-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9.5px;
+  font-weight: 800;
+  font-family: var(--font-headline);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  background: var(--color-primary-strong);
+  color: white;
+  padding: 3px 10px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+/* ACTIVE CARD */
+.restaurant-card.active {
+  border-color: var(--color-primary-soft);
+  background: #fff8f3;
+}
+
+/* TOP ROW: name + favorite */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+/* TEXT */
+.card-title {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.card-company {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.card-meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.card-meta__icon {
+  font-size: 11px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* FAVORITE BUTTON */
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  color: var(--color-border);
+  transition: color 0.15s, transform 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.favorite-btn:hover { transform: scale(1.15); }
+
+.favorite-btn.active {
+  color: var(--color-primary-soft);
+}
+
+/* ACTIONS */
+.card-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: 2px;
+}
+
+.card-actions .btn--primary {
+  flex: 1;
+  justify-content: center;
+}
+
+.card-actions .btn--route {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+}

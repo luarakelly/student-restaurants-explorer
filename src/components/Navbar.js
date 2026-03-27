@@ -1,38 +1,48 @@
-import { router } from "../Router.js"; // shared singleton
+import { router } from "../Router.js";
 
+/** Routes that should appear in the desktop navigation bar. */
 const navRoutes = router.routes.filter(route => route.showInNav);
 
 /**
- * Render the desktop navigation bar into a container.
+ * Renders the desktop navigation bar into a container element.
+ * Re-renders automatically when the route changes to update the active state.
  *
- * @param {HTMLElement} container - The element where the navbar will be rendered
+ * @param {HTMLElement} container - The element to render the navbar into.
  */
 export const renderNavbar = (container) => {
   /**
-   * Internal render function — sets the active tab based on current route
+   * Builds and injects the nav HTML based on the current route.
    */
   const renderNav = () => {
     const currentHash = window.location.hash.split("?")[0] || "#/";
 
     container.innerHTML = `
       <nav class="navbar">
-        <a class="navbar__logo" href="#/">
-          <img src="src/assets/icons/logo.svg" width="85" height="85" alt="Student Restaurant Explorer" />
+
+        <a class="navbar__brand" href="#/">
+          Student Restaurant Explorer
         </a>
-        <ul class="navbar__links">
-          ${navRoutes.map(route => `
-            <li>
-              <a href="${route.path}" class="${currentHash === route.path ? "active" : ""}">
-                <img src="src/assets/icons/${route.icon}.svg" width="20" height="20" alt="" aria-hidden="true" />
-                <span>${route.labelKey}</span>
+
+        <div class="navbar__nav">
+          ${navRoutes.map(route => {
+            const isActive = currentHash === route.path;
+
+            return `
+              <a 
+                href="${route.path}" 
+                class="nav__item nav__item--desktop ${isActive ? "is-active" : ""}"
+              >
+                <img src="src/assets/icons/${route.icon}.svg" width="18" height="18" alt="" />
+                <span class="nav__label">${route.labelKey}</span>
               </a>
-            </li>
-          `).join("")}
-        </ul>
+            `;
+          }).join("")}
+        </div>
+
       </nav>
     `;
   };
 
   renderNav();
-  router.handleSubscribe(renderNav); // subscribes to the shared router
+  router.handleSubscribe(renderNav);
 };
