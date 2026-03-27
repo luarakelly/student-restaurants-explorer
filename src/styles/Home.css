@@ -1,0 +1,109 @@
+/* ============================================
+   Home Page 
+============================================ */
+.home {
+  position: relative;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+/* ============================================
+   Background
+============================================ */
+.bg--home {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://images.unsplash.com/photo-1555992336-03a23c046c63?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
+  z-index: -1;
+  filter: brightness(0.75);
+}
+
+/* ============================================
+   Hero Section
+============================================ */
+.home__hero {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.home__content {
+  max-width: 600px;
+}
+
+.home__eyebrow {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.home__hero h1 {
+  font-family: var(--font-headline);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.home__hero h1 span {
+  color: var(--color-primary);
+}
+
+.home__subtitle {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+}
+
+/* ============================================
+   Home actions
+============================================ */
+.home__actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--color-text);
+  color: var(--color-text);
+}
+
+.btn--ghost:hover {
+  background: var(--color-bg-soft);
+}
+
+/* ============================================
+   Preview (animation slot)
+============================================ */
+.home__preview {
+  width: 300px;
+  height: 300px;
+  margin-bottom: 2rem;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+}
+
+/* ============================================
+   Responsive 
+============================================ */
+@media(min-width: 768px) {
+  .home__hero {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 8rem 4rem;
+  }
+
+  .home__preview {
+    margin-bottom: 0;
+  }
+}
