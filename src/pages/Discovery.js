@@ -5,7 +5,12 @@
  */
 
 import { restaurantsData } from "./mockupData/restaurantsData.js";
+import { dailyMenuData } from "./mockupData/dailyMenuData.js";
+import { weeklyMenusData } from "./mockupData/weeklyMenuData.js";
+
 import { SearchBox, bindSearchFiltersEvent } from "../components/SearchBox.js";
+import { openModal, ModalHeader } from "../components/Modal.js";
+import { MenuCard, bindMenuCardTabs } from "../components/MenuCard.js";
 import { RestaurantCard, bindRestaurantCardEvent } from "../components/RestaurantCard.js";
 
 /**
@@ -119,8 +124,14 @@ export default function render(app) {
 
     /** @param {string} id - The _id of the restaurant whose menu was requested. */
     onMenu: (id) => {
-      console.log("Open menu for:", id);
-      // TODO: menu
+      const restaurant = restaurants.find(r => r._id === id);
+
+      const overlay = openModal(
+        ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
+        MenuCard(restaurant, dailyMenuData, weeklyMenusData)
+      );
+
+      bindMenuCardTabs(overlay, restaurant._id, dailyMenuData, weeklyMenusData);
     }
   });
 
