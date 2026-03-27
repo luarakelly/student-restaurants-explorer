@@ -1,0 +1,117 @@
+/* ============================================
+   HEADER 
+============================================ */
+.discovery-header {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+/* ============================================
+   SEARCH
+============================================ */
+.search-row {
+  display: flex;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+}
+
+.search-box__icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 8px 10px 8px 30px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-high);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.search-box input:focus {
+  outline: 2px solid var(--color-primary-soft);
+  outline-offset: 1px;
+}
+
+/* ============================================
+   FILTERS
+============================================ */
+.filters {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Buttons */
+.filter-chip {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  background: var(--color-surface-high);
+  font-size: 12px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: all 0.15s ease;
+}
+
+.filter-chip.active {
+  background: var(--color-primary-soft);
+  color: white;
+  border-color: var(--color-primary-soft);
+}
+
+.filter-chip:hover:not(.active) {
+  background: var(--color-surface-mid);
+}
+
+/* Select dropdowns */
+.filters select {
+  padding: 5px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-high);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+/* Favorites button */
+.filter-favorites {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  background: var(--color-surface-high);
+  font-size: 12px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: all 0.15s ease;
+}
+
+.filter-favorites.active {
+  background: #fff0ea;
+  border-color: #f4c0a8;
+  color: var(--color-primary);
+}

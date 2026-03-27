@@ -1,177 +1,141 @@
 /* ============================================
-   CSS Reset - Normalize default browser styles
-   ============================================ */
+   IMPORTS 
+============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap');
+
+@import './Discovery.css';
+@import './components/SearchBox.css';
+@import './components/Nav.css';
+@import './components/RestaurantCard.css';
+@import './components/Modal.css';
+@import './components/MenuCard.css';
+@import './components/MapPanel.css';
+
+/* ============================================
+   RESET
+============================================ */
 *, *::before, *::after {
-  box-sizing: border-box; /* include padding & border in width */
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* ==================================================================
-   Global Design - Define reusable variables (colors, spacing, fonts)
-   =================================================================*/
-
+/* ============================================
+   DESIGN SYSTEM
+============================================ */
 :root {
-  /* App palette colors */
-  --color-primary: #185FA5;
-  --color-primary-light: #E6F1FB;
+  /* Colors */
+  --color-primary: #9c3f00;
+  --color-primary-strong: #f66700;
+  --color-primary-soft: #c94f00;
 
-   /* Text colors */
-  --color-text: #1a1a1a;
-  --color-text-muted: #5F5E5A;
+  --color-secondary: #006666;
+  --color-secondary-soft: #8dedec;
 
-   /* Borders & backgrounds */
-  --color-border: rgba(0,0,0,0.12);
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f5f5f3;
+  --color-tertiary: #386631;
+  --color-tertiary-soft: #b9eeab;
 
-  /* Border radius scale */
+  --color-text: #322e25;
+  --color-text-muted: #605b50;
+  --color-text-inverse: #fff0ea;
+
+  --color-bg: #fef6e7;
+  --color-bg-soft: #f8f0e0;
+  --color-bg-elevated: #ffffff;
+
+  --color-bg-nav: rgba(254, 246, 231, 0.96);
+
+  --color-surface: #fef6e7;
+  --color-surface-low: #f8f0e0;
+  --color-surface-mid: #f0e7d6;
+  --color-surface-high: #eae2d0;
+
+  --color-border: #cfc8ba;
+  --color-border-soft: rgba(50, 46, 37, 0.08);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
+  /* Radius */
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 
   /* Typography */
-  --font-sans: system-ui, -apple-system, sans-serif;
-  --font-mono: "Courier New", monospace;
+  --font-headline: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Be Vietnam Pro', sans-serif;
+
+  /* Nav */
+  --nav-height: 55px;
+  --bottom-nav-height: 60px;
 }
 
-/* =========================
-   Base Body Styles
-   ========================= */
+/* ============================================
+   BASE
+============================================ */
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   color: var(--color-text);
-  background: var(--color-bg);
-
-  min-height: 100vh; /* full viewport height */
+  background: var(--color-surface);
+  overflow: auto; 
 }
 
-/* =========================
-   Links
-   ========================= */
+h1, h2, h3, h4 {
+  font-family: var(--font-headline);
+}
+
 a {
-  color: inherit;         /* inherit text color from parent */
-  text-decoration: none;  /* remove underline */
+  color: inherit;
+  text-decoration: none;
 }
 
-/* =========================
-   Navbar (Desktop Navigation)
-   ========================= */
-.navbar {
-  display: flex;
+/* ============================================
+   BUTTONS (shared, used across components)
+============================================ */
+.btn {
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 12.5px;
+  border-radius: var(--radius-md);
+  padding: 9px 14px;
+  transition: all 0.2s ease;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-
-  padding: 12px 24px;
-  border-bottom: 0.5px solid var(--color-border);
-
-  background: var(--color-bg);
+  gap: 5px;
+  text-decoration: none;
 }
 
-/* Logo */
-.navbar__logo {
-  font-size: 15px;
-  font-weight: 500;
+.btn--primary {
+  background: var(--color-primary-soft);
+  color: var(--color-text-inverse);
 }
 
-/* Navigation links container */
-.navbar__links {
+.btn--primary:hover {
+  background: var(--color-primary-strong);
+}
+
+.btn--secondary {
+  background: var(--color-secondary);
+  color: white;
+}
+
+.btn--secondary:hover {
+  background: #005959;
+}
+
+/* ============================================
+   APP SHELL
+============================================ */
+#app {
   display: flex;
-  gap: 20px;
-  list-style: none;
-}
-
-/* Individual links */
-.navbar__links a {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
-  font-size: 13px;
-  color: var(--color-text-muted);
-  transition: color 0.15s ease;
-}
-
-/* Icon matches link color */
-.navbar__links a img {
-  opacity: 0.5;
-  transition: opacity 0.15s ease;
-}
-
-/* Active link (current page) */
-.navbar__links a.active {
-  color: var(--color-primary);
-}
-
-.navbar__links a.active img {
-  opacity: 1;
-}
-
-/* =========================
-   Bottom Navigation (Tablet/Mobile)
-   ========================= */
-.bottom-nav {
-  display: none; /* hidden on desktop */
-
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  border-top: 0.5px solid var(--color-border);
-  background: var(--color-bg);
-
-  justify-content: space-around;
-  padding: 8px 0;
-
-  z-index: 100; /* ensure it stays above content */
-}
-
-/* Individual tab */
-.bottom-nav__tab {
-  display: flex;
-  flex-direction: column; /* icon above text */
-  align-items: center;
-  gap: 3px;
-
-  font-size: 10px;
-  color: var(--color-text-muted);
-}
-
-/* Active tab */
-.bottom-nav__tab.active {
-  color: var(--color-primary);
-}
-
-/* =================================================
-   Responsive Behavior - Switch UI for mobile screens
-   ================================================= */
-@media (max-width: 768px) {
-  /* Hide desktop navigation */
-  .navbar__links,
-  .navbar__actions .btn {
-    display: none;
-  }
-
-  /* Show mobile bottom nav */
-  .bottom-nav {
-    display: flex;
-  }
-}
-
-/* =========================
-   Page Layout Container
-   ========================= */
-.page {
-  padding: 24px;
-
-  max-width: 1100px; /* limit content width */
-  margin: 0 auto;    /* center horizontally */
-}
-
-/* Smaller padding on mobile */
-@media (max-width: 768px) {
-  .page {
-    padding: 16px;
-  }
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
 }
