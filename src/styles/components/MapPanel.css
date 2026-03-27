@@ -1,0 +1,128 @@
+/* ============================================
+   MAP CONTAINER
+============================================ */
+.map-panel {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.map-panel__map {
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================
+   MARKERS
+============================================ */
+.map-marker {
+  border-radius: 50%;
+}
+
+/* Nearest — orange filled, white border */
+.map-marker--nearest {
+  width: 16px;
+  height: 16px;
+  background: var(--color-primary-strong);
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Available — teal filled, white border (was transparent, now visible) */
+.map-marker--available {
+  width: 16px;
+  height: 16px;
+  background: var(--color-secondary);
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================
+   POPUP
+============================================ */
+.map-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+  font-family: var(--font-body);
+}
+
+.map-popup__name {
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.map-popup__address {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.map-popup__actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.map-popup__menu {
+  flex: 1;
+  justify-content: center;
+  font-size: 11.5px;
+  padding: 6px 10px;
+}
+
+.map-popup__route {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+/* ============================================
+   LEGEND
+============================================ */
+.map-legend {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(24, 22, 18, 0.88);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  display: flex;
+  gap: var(--space-md);
+  z-index: 999;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--font-headline);
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.legend-dot--nearest {
+  background: var(--color-primary-strong);
+}
+
+.legend-dot--available {
+  background: var(--color-secondary);
+}
