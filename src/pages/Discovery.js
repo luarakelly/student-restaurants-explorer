@@ -78,23 +78,42 @@ export default function render(app) {
   header.innerHTML = SearchBox(restaurants);
 
   // ─── Toggle ───────────────────────────────────────────────────────────────
-
+  function isMobile() {
+    return window.innerWidth < 650;
+  }
   /**
    * Switches between list and map view on mobile by moving the single map
    * instance between the mobile and desktop slots.
    * On desktop the map always stays in .content and is unaffected.
    */
   function applyToggle() {
+    if (!isMobile()) {
+      showMap = false;
+
+      list.style.display = "";
+      mapMobileWrap.style.display = "none";
+      toggleBtn.style.display = "none";
+
+      if (mapInstance) {
+        mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
+      }
+
+      return;
+    }
+
+    // Mobile behavior
+    toggleBtn.style.display = "block";
+
     list.style.display = showMap ? "none" : "";
     mapMobileWrap.style.display = showMap ? "flex" : "none";
     toggleBtn.innerHTML = showMap ? "&#128203; List" : "&#128506; Map";
 
-    if (!mapInstance) return; // guard — map not yet initialised
+    if (!mapInstance) return;
 
     if (showMap) {
       mapInstance.mountTo(mapMobileWrap.querySelector("#map-slot"));
     } else {
-      mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
+      mapInstance.mountTo(document.querySelector("#map-slot"));
     }
   }
 
@@ -102,6 +121,8 @@ export default function render(app) {
     showMap = !showMap;
     applyToggle();
   });
+
+  window.addEventListener("resize", applyToggle);
 
   // ─── Filtering ────────────────────────────────────────────────────────────
 
