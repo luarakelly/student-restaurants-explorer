@@ -83,7 +83,7 @@
   bottom: calc(var(--bottom-nav-height) + 12px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 200;
+  z-index: 1000;
 }
 
 .view-toggle__btn {
@@ -101,6 +101,7 @@
   color: white;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   transition: background 0.2s ease, transform 0.15s ease;
+  z-index: 1001;
 }
 
 .view-toggle__btn:hover {
