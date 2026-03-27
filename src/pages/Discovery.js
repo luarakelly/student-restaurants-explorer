@@ -143,10 +143,20 @@ export default function render(app) {
   });
 
   // after layout, bind the map — passes same index=0 nearest logic
-  bindMapPanel(restaurants, {
-    onMarkerClick: (id) => {
-      activeId = id;
-      renderList();
-    }
+  requestAnimationFrame(() => {
+    bindMapPanel(restaurants, {
+      onMarkerClick: (id) => {
+        activeId = id;
+        renderList();
+      },
+      onMenu: (id) => {
+        const restaurant = restaurants.find(r => r._id === id);
+        const overlay = openModal(
+          ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
+          MenuCard(restaurant, dailyMenuData, weeklyMenusData)
+        );
+        bindMenuCardTabs(overlay, restaurant._id, dailyMenuData, weeklyMenusData);
+      }
+    });
   });
 }
