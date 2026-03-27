@@ -7,6 +7,9 @@
 @import './components/SearchBox.css';
 @import './components/Nav.css';
 @import './components/RestaurantCard.css';
+@import './components/Modal.css';
+@import './components/MenuCard.css';
+@import './components/MapPanel.css';
 
 /* ============================================
    RESET
