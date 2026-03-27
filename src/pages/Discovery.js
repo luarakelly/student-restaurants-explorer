@@ -12,6 +12,7 @@ import { SearchBox, bindSearchFiltersEvent } from "../components/SearchBox.js";
 import { openModal, ModalHeader } from "../components/Modal.js";
 import { MenuCard, bindMenuCardTabs } from "../components/MenuCard.js";
 import { RestaurantCard, bindRestaurantCardEvent } from "../components/RestaurantCard.js";
+import { MapPanel, bindMapPanel } from "../components/MapPanel.js";
 
 /**
  * Renders the Discovery page into the app root element.
@@ -50,7 +51,7 @@ export default function render(app) {
         <div id="list" class="discovery-list custom-scrollbar"></div>
       </aside>
       <section class="content">
-        <div id="map"></div>
+        ${MapPanel()}
       </section>
     </div>
   `;
@@ -139,5 +140,13 @@ export default function render(app) {
   bindSearchFiltersEvent(app, (nextFilters) => {
     filters = nextFilters;
     renderList();
+  });
+
+  // after layout, bind the map — passes same index=0 nearest logic
+  bindMapPanel(restaurants, {
+    onMarkerClick: (id) => {
+      activeId = id;
+      renderList();
+    }
   });
 }
