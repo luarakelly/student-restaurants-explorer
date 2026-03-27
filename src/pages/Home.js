@@ -6,7 +6,7 @@ export default async function render(app) {
 
       <section class="home__hero">
         <div class="home__content">
-          <p class="home__eyebrow">🎓 Built for students</p>
+          <p class="home__eyebrow">&#127891; Built for students</p>
 
           <h1>Find your next <span>great lunch</span></h1>
 
@@ -14,11 +14,9 @@ export default async function render(app) {
             Discover nearby restaurants and menus instantly.
           </p>
 
-          <input id="search" placeholder="Search..." />
-
           <div class="home__actions">
-            <a href="#/restaurants" class="btn btn--primary">Browse</a>
-            <a href="#/map" class="btn btn--ghost">Map</a>
+            <a href="#/Discovery" class="btn btn--primary">Browse</a>
+            <a href="#/login" class="btn btn--ghost">Login</a>
           </div>
         </div>
 
