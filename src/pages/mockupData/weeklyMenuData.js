@@ -15,6 +15,5 @@ export const weeklyMenusData = {
         }
       ]
     }
-    // 👉 You can continue the rest exactly the same way
   ]
 };
