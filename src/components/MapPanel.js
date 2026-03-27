@@ -1,18 +1,22 @@
 /**
  * @fileoverview MapPanel component. Renders the Leaflet map and markers
  * for a list of restaurants. Receives all data as parameters.
+ *
+ * Uses a single persistent map instance that is physically moved between
+ * the desktop and mobile containers via mountTo(), rather than creating
+ * two separate map instances.
  */
 
 /**
- * Renders the map container HTML.
- * Legend and map div are siblings so Leaflet does not interfere with the legend.
+ * Renders a map slot container HTML.
+ * The actual Leaflet map node is injected into this slot by mountTo().
  *
- * @returns {string} HTML string for the map container.
+ * @returns {string} HTML string for the map slot.
  */
 export function MapPanel() {
   return `
     <div class="map-panel">
-      <div id="map" class="map-panel__map"></div>
+      <div id="map-slot" class="map-panel__map"></div>
       <div class="map-legend">
         <div class="legend-item">
           <div class="legend-dot legend-dot--nearest"></div>
@@ -28,16 +32,28 @@ export function MapPanel() {
 }
 
 /**
- * Initialises the Leaflet map and places a marker for each restaurant.
- * Must be called after MapPanel() HTML is in the DOM.
+ * Initialises a single Leaflet map instance and returns a mountTo() function
+ * that physically moves the map DOM node between containers.
  *
- * @param {object[]} restaurants                              - Array of restaurant objects.
- * @param {object}   handlers                                 - Event handler callbacks.
- * @param {function(id: string): void} handlers.onMarkerClick - Called with the restaurant _id when a marker is clicked.
- * @param {function(id: string): void} handlers.onMenu        - Called when "View Menu" is clicked in a popup.
+ * Moving a DOM node does not destroy it — markers, zoom level, and open
+ * popups all survive. invalidateSize() corrects tile rendering after each move.
+ *
+ * @param {object[]} restaurants                               - Array of restaurant objects.
+ * @param {object}   handlers                                  - Event handler callbacks.
+ * @param {function(id: string): void} handlers.onMarkerClick  - Called with restaurant _id when a marker is clicked.
+ * @param {function(id: string): void} handlers.onMenu         - Called when "View Menu" is clicked in a popup.
+ * @returns {{ mountTo: function(HTMLElement): void }} Object with mountTo method.
  */
 export function bindMapPanel(restaurants, { onMarkerClick, onMenu }) {
-  const map = L.map("map");
+  // Create the map node independently — not tied to any layout slot yet.
+  const mapEl = document.createElement("div");
+  mapEl.style.width = "100%";
+  mapEl.style.height = "100%";
+
+  // Temporarily attach to body so Leaflet can measure a real size.
+  document.body.appendChild(mapEl);
+
+  const map = L.map(mapEl);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors"
@@ -82,14 +98,29 @@ export function bindMapPanel(restaurants, { onMarkerClick, onMenu }) {
     markers.push(marker);
   });
 
-  // Bind popup menu button via event delegation on the map container.
-  // Popup buttons are injected into the DOM dynamically by Leaflet
-  // Listen on the map container popup events.
-  document.getElementById("map").addEventListener("click", (e) => {
+  // Delegated listener on the map node — survives container moves.
+  mapEl.addEventListener("click", (e) => {
     const btn = e.target.closest(".map-popup__menu");
     if (btn) onMenu?.(btn.dataset.id);
   });
 
-  const group = L.featureGroup(markers);
-  map.fitBounds(group.getBounds().pad(0.2));
+  return {
+    /**
+     * Moves the map DOM node into a new parent container and tells
+     * Leaflet to remeasure its size.
+     *
+     * @param {HTMLElement} container - The element to move the map into.
+     */
+    mountTo(container) {
+      container.appendChild(mapEl);
+      map.invalidateSize();
+
+      const group = L.featureGroup(markers);
+      if (markers.length > 1) {
+        map.fitBounds(group.getBounds().pad(0.2));
+      } else if (markers.length === 1) {
+        map.setView(group.getBounds().getCenter(), 15);
+      }
+    }
+  };
 }
