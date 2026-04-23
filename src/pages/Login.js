@@ -40,5 +40,31 @@ export default function render(app) {
     </div>
   `);
 
-  
+  // ─── Elements ─────────────────────────────
+  const loginForm = overlay.querySelector("#login-form");
+  const registerForm = overlay.querySelector("#register-form");
+
+  const tabLogin = overlay.querySelector("#tab-login");
+  const tabRegister = overlay.querySelector("#tab-register");
+
+  // ─── Tab Switching ────────────────────────
+  function showLogin() {
+    loginForm.classList.remove("hidden");
+    registerForm.classList.add("hidden");
+
+    tabLogin.classList.add("auth__tab--active");
+    tabRegister.classList.remove("auth__tab--active");
+  }
+
+  function showRegister() {
+    registerForm.classList.remove("hidden");
+    loginForm.classList.add("hidden");
+
+    tabRegister.classList.add("auth__tab--active");
+    tabLogin.classList.remove("auth__tab--active");
+  }
+
+  tabLogin.addEventListener("click", showLogin);
+  tabRegister.addEventListener("click", showRegister);
+
 }
