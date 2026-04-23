@@ -1,0 +1,136 @@
+/* ============================================
+   PROFILE PAGE
+============================================ */
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* ============================================
+   HEADER
+============================================ */
+.profile__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  background: var(--color-surface-low);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Avatar */
+.profile__avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.profile__avatar img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-surface-high);
+}
+
+/* Info */
+.profile__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1;
+}
+
+.profile__info input {
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-body);
+  font-size: 14px;
+  background: var(--color-bg-elevated);
+}
+
+.profile__info input:disabled {
+  background: var(--color-surface-mid);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* Actions */
+.profile__actions {
+  margin-top: var(--space-sm);
+}
+
+/* ============================================
+   SECTIONS
+============================================ */
+.profile__preferences,
+.profile__favorites {
+  background: var(--color-surface-low);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+}
+
+.profile__preferences h3,
+.profile__favorites h3 {
+  margin-bottom: var(--space-md);
+}
+
+/* Preferences */
+.profile__preferences label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+}
+
+.profile__preferences input {
+  accent-color: var(--color-primary-soft);
+}
+
+/* ============================================
+   FAVORITES
+============================================ */
+.favorites-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.favorite-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-soft);
+}
+
+.favorite-card:hover {
+  background: var(--color-surface-mid);
+}
+
+.favorite-card button {
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.favorite-card button:hover {
+  text-decoration: underline;
+}
+
+.favorites-list p {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
