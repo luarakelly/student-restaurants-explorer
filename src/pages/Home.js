@@ -1,26 +1,135 @@
-export default async function render(app) {
+/**
+ * @fileoverview Home page — landing page for the Student Restaurant Explorer.
+ * Reuses design tokens from main.css. No external dependencies.
+ */
+
+/**
+ * Renders the Home landing page into the app root element.
+ *
+ * @param {HTMLElement} app - The root element to render the page into.
+ */
+export default function render(app) {
   app.innerHTML = `
-    <div class="home page page--with-bottom-nav">
+    <div class="home">
 
-      <div class="bg bg--home"></div>
+      <!-- ═══ HERO ═══ -->
+      <section class="hero">
+        <div class="hero__grain"></div>
 
-      <section class="home__hero">
-        <div class="home__content">
-          <p class="home__eyebrow">&#127891; Built for students</p>
+        <div class="hero__content">
+          <div class="hero__eyebrow">
+            <span class="hero__dot"></span>
+            Student Restaurant Explorer
+          </div>
 
-          <h1>Find your next <span>great lunch</span></h1>
+          <h1 class="hero__title">
+            Find your next<br/>
+            <em class="hero__title-em">great meal</em><br/>
+            on campus.
+          </h1>
 
-          <p class="home__subtitle">
-            Discover nearby restaurants and menus instantly.
+          <p class="hero__desc">
+            Browse student restaurants near you, explore daily and weekly menus,
+            compare prices for students, staff and guests — all in one place.
           </p>
 
-          <div class="home__actions">
-            <a href="#/Discovery" class="btn btn--primary">Browse</a>
-            <a href="#/login" class="btn btn--ghost">Login</a>
+          <div class="hero__actions">
+            <a href="#/Discovery" class="btn btn--hero-primary">
+              &#127869; Explore Restaurants
+            </a>
+            <a href="#/login" class="btn btn--hero-ghost">
+              Login
+            </a>
           </div>
         </div>
 
-        <div id="preview" class="home__preview"></div>
+        <div class="hero__visual">
+          <div class="hero__card hero__card--1">
+            <div class="hero__card-icon">&#127957;</div>
+            <div class="hero__card-text">
+              <strong>Autumn Harvest Bowl</strong>
+              <span>Quinoa, roasted squash, kale</span>
+            </div>
+            <div class="hero__card-price">3,10 €</div>
+          </div>
+
+          <div class="hero__card hero__card--2">
+            <div class="hero__card-icon">&#127869;</div>
+            <div class="hero__card-text">
+              <strong>Woodland Mushroom Stew</strong>
+              <span>Fresh thyme, crusty bread</span>
+            </div>
+            <div class="hero__card-price">3,10 €</div>
+          </div>
+
+          <div class="hero__card hero__card--3">
+            <div class="hero__card-icon">&#127831;</div>
+            <div class="hero__card-text">
+              <strong>Orchard Apple Crumble</strong>
+              <span>Oats, vanilla bean cream</span>
+            </div>
+            <div class="hero__card-price">3,10 €</div>
+          </div>
+
+          <div class="hero__badge">
+            <span class="hero__badge-num">6+</span>
+            <span class="hero__badge-label">Restaurants<br/>near you</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ FEATURES ═══ -->
+      <section class="features">
+        <div class="features__label">Why use it</div>
+        <h2 class="features__title">Everything you need,<br/>to find your next lunch.</h2>
+
+        <div class="features__grid">
+
+          <div class="feature-card">
+            <div class="feature-card__icon">&#128205;</div>
+            <h3 class="feature-card__title">Find nearby restaurants</h3>
+            <p class="feature-card__desc">
+              See all student restaurants on an interactive map sorted by distance from your location.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card__icon">&#128197;</div>
+            <h3 class="feature-card__title">Daily &amp; weekly menus</h3>
+            <p class="feature-card__desc">
+              Check what's cooking today or plan your meals for the whole week ahead.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card__icon">&#127991;</div>
+            <h3 class="feature-card__title">Diet &amp; price info</h3>
+            <p class="feature-card__desc">
+              Student, staff and guest prices clearly shown. Diet badges for gluten-free, vegan and more.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-card__icon">&#10084;</div>
+            <h3 class="feature-card__title">Save your favourites</h3>
+            <p class="feature-card__desc">
+              Bookmark the restaurants you love and filter to them instantly whenever you need.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══ CTA ═══ -->
+      <section class="cta">
+        <div class="cta__inner">
+          <div class="cta__grain"></div>
+          <h2 class="cta__title">Hungry right now?</h2>
+          <p class="cta__desc">See what's available near you today.</p>
+          <a href="#/Discovery" class="btn btn--hero-primary">
+            &#127869; Find a Restaurant
+          </a>
+        </div>
       </section>
 
     </div>

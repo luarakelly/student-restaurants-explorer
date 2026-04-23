@@ -1,109 +1,464 @@
 /* ============================================
-   Home Page 
+   HOME PAGE
+   Extends main.css tokens — no overrides,
+   only new layout and component rules.
 ============================================ */
+
 .home {
-  position: relative;
   min-height: 100vh;
-  font-family: var(--font-body);
-  color: var(--color-text);
-  background: var(--color-surface);
-}
-
-/* ============================================
-   Background
-============================================ */
-.bg--home {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('https://images.unsplash.com/photo-1555992336-03a23c046c63?auto=format&fit=crop&w=1350&q=80') center/cover no-repeat;
-  z-index: -1;
-  filter: brightness(0.75);
-}
-
-/* ============================================
-   Hero Section
-============================================ */
-.home__hero {
+  overflow-y: auto;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
+}
+
+/* ============================================
+   HERO
+============================================ */
+.hero {
+  min-height: calc(100vh - var(--nav-height));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--space-xl);
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+/* Subtle grain overlay for depth */
+.hero__grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 180px;
+  pointer-events: none;
+  border-radius: var(--radius-xl);
+}
+
+/* ── Content ── */
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  animation: slideUp 0.6s ease both;
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.hero__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  animation: pulse 2s ease infinite;
+}
+
+.hero__title {
+  font-family: var(--font-headline);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--color-text);
+  letter-spacing: -1px;
+}
+
+.hero__title-em {
+  font-style: italic;
+  color: var(--color-primary-soft);
+  position: relative;
+  white-space: nowrap;
+}
+
+/* Underline accent on the italic word */
+.hero__title-em::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-primary-strong);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: underlineIn 0.5s 0.7s ease forwards;
+}
+
+.hero__desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  max-width: 480px;
+}
+
+.hero__actions {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* ── Hero buttons ── */
+.btn--hero-primary {
+  background: var(--color-primary-soft);
+  color: var(--color-text-inverse);
+  padding: 14px 28px;
+  font-size: 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(201, 79, 0, 0.28);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.btn--hero-primary:hover {
+  background: var(--color-primary-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(201, 79, 0, 0.35);
+}
+
+.btn--hero-ghost {
+  background: transparent;
+  color: var(--color-text);
+  padding: 14px 28px;
+  font-size: 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-border);
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.btn--hero-ghost:hover {
+  border-color: var(--color-primary-soft);
+  background: var(--color-surface-low);
+  transform: translateY(-2px);
+}
+
+/* ── Visual (floating cards) ── */
+.hero__visual {
+  position: relative;
+  height: 420px;
+  animation: slideUp 0.6s 0.15s ease both;
+}
+
+.hero__card {
+  position: absolute;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  box-shadow: 0 8px 32px rgba(50, 46, 37, 0.10);
+  border: 1px solid var(--color-border-soft);
+  width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero__card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(50, 46, 37, 0.14);
+}
+
+.hero__card--1 {
+  top: 30px;
+  left: 20px;
+  animation: floatCard 0.7s 0.2s ease both;
+}
+
+.hero__card--2 {
+  top: 150px;
+  left: 60px;
+  animation: floatCard 0.7s 0.35s ease both;
+}
+
+.hero__card--3 {
+  top: 270px;
+  left: 20px;
+  animation: floatCard 0.7s 0.5s ease both;
+}
+
+.hero__card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--color-surface-mid);
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6rem 2rem;
-  text-align: center;
+  font-size: 22px;
+  flex-shrink: 0;
 }
 
-.home__content {
-  max-width: 600px;
+.hero__card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
-.home__eyebrow {
-  font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.home__hero h1 {
+.hero__card-text strong {
   font-family: var(--font-headline);
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.home__hero h1 span {
+.hero__card-text span {
+  font-size: 11.5px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero__card-price {
+  font-family: var(--font-headline);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-primary-soft);
+  flex-shrink: 0;
+}
+
+/* Badge */
+.hero__badge {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: var(--color-secondary);
+  color: white;
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 8px 24px rgba(0, 102, 102, 0.25);
+  animation: floatCard 0.7s 0.6s ease both;
+}
+
+.hero__badge-num {
+  font-family: var(--font-headline);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.hero__badge-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0.85;
+  line-height: 1.4;
+}
+
+/* ============================================
+   FEATURES
+============================================ */
+.features {
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.features__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.features__title {
+  font-family: var(--font-headline);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--color-text);
+  letter-spacing: -0.5px;
+  max-width: 560px;
+}
+
+.features__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+/* ── Feature card ── */
+.feature-card {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border: 1px solid var(--color-border-soft);
+  box-shadow: 0 2px 8px rgba(50, 46, 37, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(50, 46, 37, 0.10);
+  border-color: var(--color-border);
+}
+
+.feature-card__icon {
+  font-size: 28px;
+  width: 52px;
+  height: 52px;
+  background: var(--color-surface-mid);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-xs);
+}
+
+.feature-card__title {
+  font-family: var(--font-headline);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.feature-card__desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* ============================================
+   CTA
+============================================ */
+.cta {
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 1100px;
+  margin: 0 auto var(--space-xl);
+  width: 100%;
+}
+
+.cta__inner {
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-xl);
+  padding: 60px var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grain on CTA */
+.cta__grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 180px;
+  pointer-events: none;
+}
+
+.cta__title {
+  font-family: var(--font-headline);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: var(--color-text-inverse);
+  letter-spacing: -0.5px;
+}
+
+.cta__desc {
+  font-size: 16px;
+  color: rgba(255, 240, 234, 0.75);
+  max-width: 400px;
+}
+
+.cta .btn--hero-primary {
+  background: white;
+  color: var(--color-primary-soft);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cta .btn--hero-primary:hover {
+  background: var(--color-surface-low);
   color: var(--color-primary);
 }
 
-.home__subtitle {
-  font-size: 1.125rem;
-  margin-bottom: 2rem;
+/* ============================================
+   ANIMATIONS
+============================================ */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatCard {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes underlineIn {
+  to { transform: scaleX(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
 }
 
 /* ============================================
-   Home actions
+   RESPONSIVE
 ============================================ */
-.home__actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.btn--ghost {
-  background: transparent;
-  border: 1px solid var(--color-text);
-  color: var(--color-text);
-}
-
-.btn--ghost:hover {
-  background: var(--color-bg-soft);
-}
-
-/* ============================================
-   Preview (animation slot)
-============================================ */
-.home__preview {
-  width: 300px;
-  height: 300px;
-  margin-bottom: 2rem;
-  border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(6px);
-}
-
-/* ============================================
-   Responsive 
-============================================ */
-@media(min-width: 768px) {
-  .home__hero {
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: left;
-    padding: 8rem 4rem;
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: unset;
+    padding-top: var(--space-xl);
+    gap: var(--space-lg);
   }
 
-  .home__preview {
-    margin-bottom: 0;
+  .hero__visual {
+    height: 320px;
+  }
+
+  .hero__card {
+    width: 260px;
+  }
+
+  .features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero__visual {
+    display: none; /* cards overlap badly on very small screens */
+  }
+
+  .features__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta__inner {
+    padding: var(--space-xl) var(--space-lg);
   }
 }
