@@ -3,10 +3,21 @@
  */
 
 import {
+  loginRequest,
   registerRequest,
+  fetchCurrentUserRequest,
+  updateUserRequest,
+  uploadAvatarRequest
 } from "../services/authService.js";
 
-export default function createAuthController() {
+export default function authController() {
+  // ─────────────────────────────────────────────
+  // LOGIN
+  // ─────────────────────────────────────────────
+  async function login(credentials) {
+    const data = await loginRequest(credentials);
+    return data;
+  }
 
   // ─────────────────────────────────────────────
   // REGISTER
@@ -16,6 +27,7 @@ export default function createAuthController() {
   }
 
   return {
+    login,
     register,
   };
 }
