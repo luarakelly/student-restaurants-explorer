@@ -3,6 +3,8 @@
  * Reuses design tokens from main.css. No external dependencies.
  */
 
+import Login from "../components/Login.js";
+
 /**
  * Renders the Home landing page into the app root element.
  *
@@ -37,9 +39,9 @@ export default function render(app) {
             <a href="#/Discovery" class="btn btn--hero-primary">
               &#127869; Explore Restaurants
             </a>
-            <a href="#/login" class="btn btn--hero-ghost">
+            <button id="open-login" class="btn btn--hero-ghost">
               Login
-            </a>
+            </button>
           </div>
         </div>
 
@@ -134,4 +136,8 @@ export default function render(app) {
 
     </div>
   `;
+
+  document.querySelector("#open-login").addEventListener("click", () => {
+    Login();
+  });
 }
