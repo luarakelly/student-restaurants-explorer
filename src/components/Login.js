@@ -6,7 +6,6 @@ import { openModal, ModalHeader } from "./Modal.js";
 import createAuthController  from "../controllers/authController.js"
 
 export default function Login() {
-  const authController = createAuthController();
   
   const overlay = openModal(`
     ${ModalHeader("Welcome", "Login or create an account")}
@@ -21,7 +20,7 @@ export default function Login() {
 
       <!-- Login Form -->
       <form id="login-form" class="auth__form">
-        <input id="login-email" type="email" placeholder="Email" />
+        <input id="login-username" type="text" placeholder="Username" />
         <input id="login-password" type="password" placeholder="Password" />
 
         <button type="submit" class="btn btn--primary">
@@ -70,6 +69,18 @@ export default function Login() {
   tabLogin.addEventListener("click", showLogin);
   tabRegister.addEventListener("click", showRegister);
 
+  // ─── Login Submit ─────────────────────────
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = overlay.querySelector("#login-username").value;
+    const password = overlay.querySelector("#login-password").value;
+
+    await createAuthController.login({ username, password });
+
+    overlay.remove();
+  });
+
   // ─── Register Submit ──────────────────────
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -78,7 +89,7 @@ export default function Login() {
     const email = overlay.querySelector("#reg-email").value;
     const password = overlay.querySelector("#reg-password").value;
 
-    await authController.register({ username, email, password });
+    await createAuthController.register({ username, email, password });
 
     overlay.remove();
   });
