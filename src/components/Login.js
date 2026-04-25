@@ -3,7 +3,7 @@
  */
 
 import { openModal, ModalHeader } from "./Modal.js";
-import createAuthController  from "../controllers/authController.js"
+import auth  from "../controllers/authController.js"
 
 export default function Login() {
   
@@ -76,7 +76,7 @@ export default function Login() {
     const username = overlay.querySelector("#login-username").value;
     const password = overlay.querySelector("#login-password").value;
 
-    await createAuthController.login({ username, password });
+    await auth.login({ username, password });
 
     overlay.remove();
   });
@@ -89,7 +89,7 @@ export default function Login() {
     const email = overlay.querySelector("#reg-email").value;
     const password = overlay.querySelector("#reg-password").value;
 
-    await createAuthController.register({ username, email, password });
+    await auth.register({ username, email, password });
 
     overlay.remove();
   });
