@@ -1,21 +1,48 @@
 /**
- * Auth controller — manages state and business logic
+ * Auth controller — manages authentication (token only)
+ * Responsibilities:
+ * - Login / logout
+ * - Store token in localStorage
+ * - Expose helpers
  */
 
 import {
   loginRequest,
-  registerRequest,
-  fetchCurrentUserRequest,
-  updateUserRequest,
-  uploadAvatarRequest
+  registerRequest
 } from "../services/authService.js";
 
-export default function authController() {
+const TOKEN_KEY = "token";
+
+function authController() {
+
+  // ─────────────────────────────────────────────
+  // GET TOKEN
+  // ─────────────────────────────────────────────
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
+  // ─────────────────────────────────────────────
+  // SET TOKEN
+  // ─────────────────────────────────────────────
+  function setToken(token) {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
+      console.log("TOKEN FROM LOCAL STORAGE:", getToken());
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+  }
+
   // ─────────────────────────────────────────────
   // LOGIN
   // ─────────────────────────────────────────────
   async function login(credentials) {
     const data = await loginRequest(credentials);
+
+    // Store token
+    setToken(data.token);
+
     return data;
   }
 
@@ -26,8 +53,22 @@ export default function authController() {
     return await registerRequest(payload);
   }
 
+  // ─────────────────────────────────────────────
+  // LOGOUT
+  // ─────────────────────────────────────────────
+  function logout() {
+    setToken(null);
+    console.log("TOKEN FROM LOCAL STORAGE:", getToken());
+  }
+
   return {
     login,
     register,
+    logout,
+    getToken
   };
 }
+
+// Export single auth controller instance
+const auth = authController();
+export default auth;
