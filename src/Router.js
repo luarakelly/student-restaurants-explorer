@@ -14,14 +14,6 @@ function Router() {
    *   - labelKey: string key used in navigation labels
    *   - icon: icon filename for BottomNav (optional)
    *   - showInNav: boolean flag to include in Navbar/BottomNav
-   *
-   * @type {Array<{
-   *   path: string,
-   *   load: Function,
-   *   labelKey?: string,
-   *   icon?: string,
-   *   showInNav?: boolean
-   * }>}
    */
   const routes = [
     { 
@@ -55,7 +47,6 @@ function Router() {
   /**
    * Subscribers array — components that react to route changes.
    * Each subscriber is a function that receives the current route object.
-   * @type {Array<function(object|null):void>}
    */
   const routeSubscribers = [];
 
@@ -63,7 +54,7 @@ function Router() {
    * Subscribe a component to route changes.
    * Called whenever the route changes (hash change).
    *
-   * @param {function(object|null):void} callback - function receiving the current route
+   * callback - function receiving the current route
    */
   const handleSubscribe = (callback) => {
     if (typeof callback === "function") {
@@ -73,8 +64,7 @@ function Router() {
 
   /**
    * Resolve the current hash to a matching route object
-   *
-   * @returns {object|null} - Route object or null if no match
+   * Route object or null if no match
    */
   const resolve = () => {
     const hash = window.location.hash || "#/";
