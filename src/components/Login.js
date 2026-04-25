@@ -73,12 +73,26 @@ export default function Login() {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const username = overlay.querySelector("#login-username").value;
-    const password = overlay.querySelector("#login-password").value;
+    try {
+      const username = overlay.querySelector("#login-username").value;
+      const password = overlay.querySelector("#login-password").value;
 
-    await auth.login({ username, password });
+      if (!username || !password) {
+        alert("Login failed. Please input your credentials.");
+        return;
+      } else if ((username  || password) < 5) {
+        alert("Login failed. Please provide credentials with minimun 5 characters.");
+        return;
+      };
 
-    overlay.remove();
+
+      await auth.login({ username, password });
+
+      overlay.remove();
+    } catch (err) {
+      console.error("Login failed:", err);
+      alert("Login failed. Please check your credentials.");
+    }
   });
 
   // ─── Register Submit ──────────────────────
@@ -90,6 +104,7 @@ export default function Login() {
     const password = overlay.querySelector("#reg-password").value;
 
     await auth.register({ username, email, password });
+    await auth.login({ username, password });
 
     overlay.remove();
   });
