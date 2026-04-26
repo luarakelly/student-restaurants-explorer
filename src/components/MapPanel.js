@@ -1,5 +1,5 @@
 /**
- * @fileoverview MapPanel component. Renders the Leaflet map and markers
+ * MapPanel component. Renders the Leaflet map and markers
  * for a list of restaurants. Receives all data as parameters.
  *
  * Uses a single persistent map instance that is physically moved between
@@ -11,7 +11,7 @@
  * Renders a map slot container HTML.
  * The actual Leaflet map node is injected into this slot by mountTo().
  *
- * @returns {string} HTML string for the map slot.
+ * returns HTML string for the map slot.
  */
 export function MapPanel() {
   return `

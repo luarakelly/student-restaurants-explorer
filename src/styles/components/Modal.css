@@ -82,6 +82,18 @@
 }
 
 /* ============================================
+  CONTENT
+============================================ */
+.modal__content {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ============================================
    ANIMATIONS
 ============================================ */
 @keyframes fadeIn {
@@ -92,4 +104,24 @@
 @keyframes scaleIn {
   from { transform: scale(0.95); opacity: 0; }
   to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ============================================
+  RESPONSIVENESS
+============================================ */
+@media (max-width: 600px) {
+  .modal--menu {
+    width: 95%;
+    max-height: 90vh;
+    border-radius: var(--radius-lg);
+  }
+
+  .modal__content {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .menu-modal__header {
+    padding: var(--space-md);
+  }
 }

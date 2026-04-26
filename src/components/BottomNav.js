@@ -7,7 +7,7 @@ const bottomNavRoutes = router.routes.filter(route => route.showInNav);
  * Renders the mobile bottom navigation bar into a container element.
  * Re-renders automatically when the route changes to update the active state.
  *
- * @param {HTMLElement} container - The element to render the bottom nav into.
+ * container - The element to render the bottom nav into.
  */
 export const renderBottomNav = (container) => {
   /**

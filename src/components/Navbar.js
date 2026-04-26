@@ -7,7 +7,7 @@ const navRoutes = router.routes.filter(route => route.showInNav);
  * Renders the desktop navigation bar into a container element.
  * Re-renders automatically when the route changes to update the active state.
  *
- * @param {HTMLElement} container - The element to render the navbar into.
+ * container parameter - The element to render the navbar into.
  */
 export const renderNavbar = (container) => {
   /**

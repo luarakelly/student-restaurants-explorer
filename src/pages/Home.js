@@ -1,12 +1,13 @@
 /**
- * @fileoverview Home page — landing page for the Student Restaurant Explorer.
- * Reuses design tokens from main.css. No external dependencies.
+ * Home page — landing page for the Student Restaurant Explorer.
  */
+
+import Login from "../components/Login.js";
+import profile from "../controllers/profileController.js";
 
 /**
  * Renders the Home landing page into the app root element.
- *
- * @param {HTMLElement} app - The root element to render the page into.
+ * app - The root element to render the page into.
  */
 export default function render(app) {
   app.innerHTML = `
@@ -37,9 +38,9 @@ export default function render(app) {
             <a href="#/Discovery" class="btn btn--hero-primary">
               &#127869; Explore Restaurants
             </a>
-            <a href="#/login" class="btn btn--hero-ghost">
+            <button id="open-login" class="btn btn--hero-ghost">
               Login
-            </a>
+            </button>
           </div>
         </div>
 
@@ -134,4 +135,12 @@ export default function render(app) {
 
     </div>
   `;
+
+  document.querySelector("#open-login").addEventListener("click", () => {
+    Login(async () => {
+      await profile.init(); 
+      await render(app);
+      window.location.hash = "#/profile"; 
+    });
+  });
 }
