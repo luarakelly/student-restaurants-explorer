@@ -4,7 +4,6 @@
 
 import { openModal, ModalHeader } from "./Modal.js";
 import auth from "../controllers/authController.js";
-import profile from "../controllers/profileController.js";
 
 export default function Login(onSuccess) {
   const overlay = openModal(`
@@ -88,8 +87,7 @@ export default function Login(onSuccess) {
 
     try {
       await auth.login({ username, password });
-      await profile.init(); // ← wait for user to be saved to localStorage
-      onSuccess?.();        // ← then navigate
+      onSuccess?.();       
       overlay.remove();
     } catch (err) {
       console.error("Login failed:", err);
@@ -113,7 +111,6 @@ export default function Login(onSuccess) {
     try {
       await auth.register({ username, email, password });
       await auth.login({ username, password });
-      await profile.init(); // ← same here
       onSuccess?.();
       overlay.remove();
     } catch (err) {
