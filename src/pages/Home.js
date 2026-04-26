@@ -1,14 +1,12 @@
 /**
- * @fileoverview Home page — landing page for the Student Restaurant Explorer.
- * Reuses design tokens from main.css. No external dependencies.
+ * Home page — landing page for the Student Restaurant Explorer.
  */
 
 import Login from "../components/Login.js";
 
 /**
  * Renders the Home landing page into the app root element.
- *
- * @param {HTMLElement} app - The root element to render the page into.
+ * app - The root element to render the page into.
  */
 export default function render(app) {
   app.innerHTML = `
