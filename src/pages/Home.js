@@ -136,6 +136,9 @@ export default function render(app) {
   `;
 
   document.querySelector("#open-login").addEventListener("click", () => {
-    Login();
+    Login(async () => {
+        await render(app);
+        window.location.hash = "#/profile"; 
+      });
   });
 }
