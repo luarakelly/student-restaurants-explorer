@@ -67,3 +67,27 @@ export async function fetchWeeklyMenuRequest(id, lang = "en") {
 
   return data;
 }
+
+// ─────────────────────────────────────────────
+// SAVE FAVOURITE RESTAURANT
+// ─────────────────────────────────────────────
+export async function saveFavouriteRestaurantRequest(restaurantId, token) {
+  const res = await fetch(`${API_URL}/users`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ favouriteRestaurant: restaurantId })
+  });
+
+  const data = await res.json();
+
+  console.log("SAVE FAVOURITE RESPONSE:", data);
+
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to save favourite restaurant");
+  }
+
+  return data;
+}
