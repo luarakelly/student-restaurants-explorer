@@ -3,10 +3,10 @@
  */
 
 import { openModal, ModalHeader } from "./Modal.js";
-import auth  from "../controllers/authController.js"
+import auth from "../controllers/authController.js";
+import profile from "../controllers/profileController.js";
 
-export default function Login() {
-  
+export default function Login(onSuccess) {
   const overlay = openModal(`
     ${ModalHeader("Welcome", "Login or create an account")}
 
@@ -42,14 +42,14 @@ export default function Login() {
     </div>
   `);
 
-  // ─── Elements ─────────────────────────────
+  // ─── ELEMENTS ─────────────────────────────
   const loginForm = overlay.querySelector("#login-form");
   const registerForm = overlay.querySelector("#register-form");
 
   const tabLogin = overlay.querySelector("#tab-login");
   const tabRegister = overlay.querySelector("#tab-register");
 
-  // ─── Tab Switching ────────────────────────
+  // ─── TAB SWITCH ───────────────────────────
   function showLogin() {
     loginForm.classList.remove("hidden");
     registerForm.classList.add("hidden");
@@ -69,25 +69,27 @@ export default function Login() {
   tabLogin.addEventListener("click", showLogin);
   tabRegister.addEventListener("click", showRegister);
 
-  // ─── Login Submit ─────────────────────────
+  // ─── LOGIN SUBMIT ─────────────────────────
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const username = overlay.querySelector("#login-username").value.trim();
+    const password = overlay.querySelector("#login-password").value.trim();
+
+    if (!username || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    if (username.length < 5 || password.length < 5) {
+      alert("Credentials must be at least 5 characters long.");
+      return;
+    }
+
     try {
-      const username = overlay.querySelector("#login-username").value;
-      const password = overlay.querySelector("#login-password").value;
-
-      if (!username || !password) {
-        alert("Login failed. Please input your credentials.");
-        return;
-      } else if ((username  || password) < 5) {
-        alert("Login failed. Please provide credentials with minimun 5 characters.");
-        return;
-      };
-
-
       await auth.login({ username, password });
-
+      await profile.init(); // ← wait for user to be saved to localStorage
+      onSuccess?.();        // ← then navigate
       overlay.remove();
     } catch (err) {
       console.error("Login failed:", err);
@@ -95,17 +97,28 @@ export default function Login() {
     }
   });
 
-  // ─── Register Submit ──────────────────────
+  // ─── REGISTER SUBMIT ──────────────────────
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const username = overlay.querySelector("#reg-username").value;
-    const email = overlay.querySelector("#reg-email").value;
-    const password = overlay.querySelector("#reg-password").value;
+    const username = overlay.querySelector("#reg-username").value.trim();
+    const email = overlay.querySelector("#reg-email").value.trim();
+    const password = overlay.querySelector("#reg-password").value.trim();
 
-    await auth.register({ username, email, password });
-    await auth.login({ username, password });
+    if (!username || !email || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
 
-    overlay.remove();
+    try {
+      await auth.register({ username, email, password });
+      await auth.login({ username, password });
+      await profile.init(); // ← same here
+      onSuccess?.();
+      overlay.remove();
+    } catch (err) {
+      console.error("Register failed:", err);
+      alert("Registration failed.");
+    }
   });
 }
