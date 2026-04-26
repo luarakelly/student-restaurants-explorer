@@ -112,8 +112,21 @@
   transform: scale(0.97);
 }
 
+/* ============================================
+   DISCOVERY TOGGLE — MAP / LIST VIEW
+============================================ */
+
+/* Hide mobile map wrap and toggle button by default (desktop) */
+.discovery-map-mobile { display: none; }
+.view-toggle          { display: none; }
+
+/* When map view is active on mobile */
+.discovery--map .discovery-list     { display: none; }
+.discovery--map .discovery-map-mobile { display: flex; }
+
+/* ============================================
+   RESPONSIVE — MOBILE
+============================================ */
 @media (max-width: 650px) {
-  .view-toggle {
-    display: flex;   /* only visible on mobile */
-  }
+  .view-toggle { display: block; }
 }
