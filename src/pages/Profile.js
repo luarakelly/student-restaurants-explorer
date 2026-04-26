@@ -103,6 +103,53 @@ export default async function render(app) {
 
       </div>
     `);
+
+    const fileInput = overlay.querySelector("#avatar-input");
+    const fileName = overlay.querySelector(".file-upload__name");
+
+    fileInput.addEventListener("change", () => {
+      fileName.textContent = fileInput.files[0]
+        ? fileInput.files[0].name
+        : "No file selected";
+    });
+
+    overlay.querySelector("#save").addEventListener("click", async () => {
+      const file = fileInput.files[0];
+
+      const newUsername = overlay.querySelector("#username").value.trim();
+      const newEmail = overlay.querySelector("#email").value.trim();
+      const newPassword = overlay.querySelector("#password").value.trim();
+
+      const updates = {};
+
+      // avatar update
+      if (file) {
+        await profile.changeAvatar(file);
+      }
+
+      // compare against current user
+      if (newUsername !== currentUser.username) {
+        updates.username = newUsername;
+      }
+
+      if (newEmail !== currentUser.email) {
+        updates.email = newEmail;
+      }
+
+      if (newPassword.length > 0) {
+        updates.password = newPassword;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await profile.saveProfile(updates);
+      }
+
+      overlay.remove();
+
+      // refresh UI with new data
+      await profile.init();
+      await render(app);
+    });
   }
 
   // ─── EVENTS ────────────────────────────────
