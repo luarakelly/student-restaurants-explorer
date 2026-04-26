@@ -1,22 +1,22 @@
 /**
  * Renders a single restaurant card as an HTML string.
  *
- * @param {object}  r              - The restaurant data object.
- * @param {string}  r._id          - Unique identifier.
- * @param {string}  r.name         - Restaurant name.
- * @param {string}  r.company      - Operating company name.
- * @param {string}  r.address      - Street address.
- * @param {string}  r.city         - City name.
- * @param {string}  r.phone        - Phone number.
- * @param {object}  r.location     - GeoJSON location object.
- * @param {number[]} r.location.coordinates - [longitude, latitude] pair.
- * @param {boolean} active         - Whether this card is currently selected.
- * @param {boolean} favorited      - Whether this restaurant is in the user's favorites.
- * @param {boolean} [nearest=false] - Whether to show the "NEAREST" tag (always the first card).
- * @returns {string} HTML string for the restaurant card.
+ * r              - The restaurant data object.
+ * r._id          - Unique identifier.
+ * r.name         - Restaurant name.
+ * r.company      - Operating company name.
+ * r.address      - Street address.
+ * r.city         - City name.
+ * r.phone        - Phone number.
+ * r.location     - GeoJSON location object.
+ * r.location.coordinates - [longitude, latitude] pair.
+ * active         - Whether this card is currently selected.
+ * favorited      - Whether this restaurant is in the user's favorites.
+ * } [nearest=false] - Whether to show the "NEAREST" tag (always the first card).
  */
-export function RestaurantCard(r, active, favorited, nearest = false) {
+export function RestaurantCard(r, active, favorited, nearest = false, isLoggedIn = false) {
   const [lng, lat] = r.location.coordinates;
+
   return `
     <div class="restaurant-card ${active ? "active" : ""}" data-id="${r._id}">
 
@@ -24,9 +24,15 @@ export function RestaurantCard(r, active, favorited, nearest = false) {
 
       <div class="card-top">
         <div class="card-title">${r.name}</div>
-        <button class="favorite-btn ${favorited ? "active" : ""}" data-fav="${r._id}" title="Save to favorites">
-          ${favorited ? "&#10084;&#65039;" : "&#129293;"}
-        </button>
+
+        ${
+          isLoggedIn
+            ? `<button class="favorite-btn ${favorited ? "active" : ""}" data-fav="${r._id}" title="Save to favorites">
+                ${favorited ? "&#10084;&#65039;" : "&#129293;"}
+              </button>`
+            : ""
+        }
+
       </div>
 
       <div class="card-company">
@@ -68,11 +74,11 @@ export function RestaurantCard(r, active, favorited, nearest = false) {
  * Handles card selection, favorite toggling, and menu opening
  * without needing to re-bind after every re-render.
  *
- * @param {HTMLElement} listEl          - The container element holding all restaurant cards.
- * @param {object}      handlers        - Event handler callbacks.
- * @param {function(id: string): void} handlers.onSelect   - Called when a card body is clicked.
- * @param {function(id: string): void} handlers.onFavorite - Called when the favorite button is clicked.
- * @param {function(id: string): void} handlers.onMenu     - Called when the "View Menu" button is clicked.
+ * listEl          - The container element holding all restaurant cards.
+ * handlers        - Event handler callbacks.
+ * handlers.onSelect   - Called when a card body is clicked.
+ * handlers.onFavorite - Called when the favorite button is clicked.
+ * handlers.onMenu     - Called when the "View Menu" button is clicked.
  */
 export function bindRestaurantCardEvent(listEl, { onSelect, onFavorite, onMenu }) {
   listEl.addEventListener("click", (e) => {
