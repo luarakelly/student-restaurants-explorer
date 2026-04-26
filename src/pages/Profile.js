@@ -20,6 +20,7 @@ export default async function render(app) {
 
     app.querySelector("#login-btn").addEventListener("click", () => {
       Login(async () => {
+        await profile.init(); 
         await render(app);
         window.location.hash = "#/profile"; 
       });
