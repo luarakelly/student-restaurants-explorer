@@ -13,7 +13,6 @@
  * active         - Whether this card is currently selected.
  * favorited      - Whether this restaurant is in the user's favorites.
  * } [nearest=false] - Whether to show the "NEAREST" tag (always the first card).
- *  HTML string for the restaurant card.
  */
 export function RestaurantCard(r, active, favorited, nearest = false, isLoggedIn = false) {
   const [lng, lat] = r.location.coordinates;

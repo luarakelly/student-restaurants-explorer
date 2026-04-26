@@ -1,13 +1,12 @@
 /**
- * @fileoverview MenuCard component. Renders the daily/weekly menu content
+ * MenuCard component. Renders the daily/weekly menu content
  * and external maps link in footer. Receives all data as parameters.
  */
 
 /**
  * Renders diet badge pills from a comma-separated diets string.
  *
- * @param {string} dietsStr - Comma-separated diet codes e.g. "G, M, L".
- * @returns {string} HTML string of badge spans.
+ * dietsStr - Comma-separated diet codes e.g. "G, M, L".
  */
 function DietBadges(dietsStr = "") {
   return dietsStr.split(",")
@@ -19,12 +18,6 @@ function DietBadges(dietsStr = "") {
 
 /**
  * Renders a single menu item card.
- *
- * @param {object} course         - A course object from the menu data.
- * @param {string} course.name    - Course name.
- * @param {string} [course.diets] - Comma-separated diet codes.
- * @param {string} [course.price] - Price string.
- * @returns {string} HTML string for the menu item card.
  */
 function MenuItemCard(course) {
   const priceHTML = `
@@ -47,10 +40,6 @@ function MenuItemCard(course) {
 
 /**
  * Renders all courses for today's menu.
- *
- * @param {object}   daily         - The daily menu data object.
- * @param {object[]} daily.courses - Array of course objects.
- * @returns {string} HTML string of daily menu item cards.
  */
 function renderDaily(daily) {
   if (!daily?.courses?.length) {
@@ -61,10 +50,6 @@ function renderDaily(daily) {
 
 /**
  * Renders the full weekly menu grouped by day.
- *
- * @param {object}   weekly      - The weekly menu data object.
- * @param {object[]} weekly.days - Array of day objects.
- * @returns {string} HTML string of day sections with menu item cards.
  */
 function renderWeekly(weekly) {
   if (!weekly?.days?.length) {
@@ -81,13 +66,6 @@ function renderWeekly(weekly) {
 /**
  * Renders the full MenuCard HTML — tabs, scrollable item list, and footer.
  * Daily menu is rendered immediately. Weekly is fetched on tab click via bindMenuCardTabs.
- *
- * @param {object}   restaurant                       - The restaurant object.
- * @param {string}   restaurant._id                   - Unique identifier.
- * @param {object}   restaurant.location              - Geo location object.
- * @param {number[]} restaurant.location.coordinates  - [longitude, latitude].
- * @param {object}   daily                            - Daily menu data fetched from API.
- * @returns {string} HTML string for the full menu card content.
  */
 export function MenuCard(restaurant, daily) {
   const [lng, lat] = restaurant.location.coordinates;
@@ -117,11 +95,6 @@ export function MenuCard(restaurant, daily) {
  * Binds the Daily/Weekly tab toggle inside an already-open modal overlay.
  * Weekly menu is fetched lazily on first tab click.
  * Must be called after openModal() returns the overlay element.
- *
- * @param {HTMLElement} overlay      - The modal overlay element returned by openModal().
- * @param {string}      restaurantId - The restaurant _id used to scope the body element.
- * @param {object}      daily        - Daily menu data already fetched.
- * @param {function}    fetchWeekly  - Async function that fetches and returns weekly menu data.
  */
 export function bindMenuCardTabs(overlay, restaurantId, daily, fetchWeekly) {
   const tabs = overlay.querySelectorAll(".menu-tab");
