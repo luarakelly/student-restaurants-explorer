@@ -2,6 +2,7 @@ import { router } from "./src/Router.js"; // take the singleton
 import { renderNavbar } from "./src/components/Navbar.js";
 import { renderBottomNav } from "./src/components/BottomNav.js";
 import profile from "./src/controllers/profileController.js";
+import discovery from "./src/controllers/discoveryController.js";
 
 /**
  * Application entry point.
@@ -10,8 +11,8 @@ import profile from "./src/controllers/profileController.js";
  */
 function App() {
   const init = async () => {
-    // Fetch user if existent
-    await profile.init();
+    await profile.init();   // fetch user if existent
+    await discovery.init(); // fetch and store restaurants in localStorage on startup
 
     renderNavbar(document.getElementById("navbar"));
     renderBottomNav(document.getElementById("bottom-nav"));
