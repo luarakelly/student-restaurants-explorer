@@ -10,6 +10,8 @@ import {
   fetchCurrentUserRequest,
 } from "../services/profileService.js";
 
+import auth from "./authController.js";
+
 const USER_KEY = "user";
 
 function profileController() {
@@ -21,7 +23,20 @@ function profileController() {
     return JSON.parse(localStorage.getItem(USER_KEY));
   }
 
+  // ─────────────────────────────────────────────
+  // INIT / FETCH USER
+  // ─────────────────────────────────────────────
+  async function init() {
+    const token = auth.getToken();
+    if (!token) return null;
+
+    const user = await fetchCurrentUserRequest(token);
+
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  }
+
   return {
+    init,
     getLocalUser
   };
 }
