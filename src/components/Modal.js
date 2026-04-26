@@ -34,8 +34,10 @@ export function openModal(contentHTML) {
   overlay.className = "modal-overlay";
   overlay.innerHTML = `
     <div class="modal modal--menu">
-      ${contentHTML}
-    </div>
+  <div class="modal__content">
+    ${contentHTML}
+  </div>
+</div>
   `;
 
   document.body.appendChild(overlay);
