@@ -1,6 +1,8 @@
 import profile from "../controllers/profileController.js";
 import auth from "../controllers/authController.js";
+import discovery from "../controllers/discoveryController.js";
 import { openModal, ModalHeader } from "../components/Modal.js";
+import { RestaurantCard } from "../components/RestaurantCard.js";
 import Login from "../components/Login.js";
 
 export default async function render(app) {
@@ -19,11 +21,7 @@ export default async function render(app) {
     `;
 
     app.querySelector("#login-btn").addEventListener("click", () => {
-      Login(async () => {
-        await profile.init(); 
-        await render(app);
-        window.location.hash = "#/profile"; 
-      });
+      Login(() => render(app));
     });
     return;
   }
@@ -50,18 +48,59 @@ export default async function render(app) {
 
       </section>
 
-      <section class="profile__preferences">
-        <h3>Preferences</h3>
-        <p id="prefs-text">No preferences selected</p>
-      </section>
-
-      <section class="profile__favorites">
-        <h3>Favorites</h3>
-        <div id="favorites-list"></div>
+      <section class="profile__favorite">
+        <h3>Favourite Restaurant</h3>
+        <div id="favorite-slot"></div>
       </section>
 
     </div>
   `;
+
+  // ─── FAVOURITE RESTAURANT ─────────────────────────────────────────────────
+  // Reuses RestaurantCard component — rendered as static (no interactions).
+  // Reads from localStorage cache first, fetches from API only if needed.
+
+  const favouriteSlot = app.querySelector("#favorite-slot");
+  const favouriteId = user.favouriteRestaurant;
+
+  if (!favouriteId) {
+    // ─── No favourite set ──────────────────────────────────────────────
+    favouriteSlot.innerHTML = `
+      <p class="profile__no-favorite">
+        No favourite selected yet — browse restaurants to pick one!
+      </p>
+    `;
+  } else {
+    // ─── Try cache first ───────────────────────────────────────────────
+    const cached = discovery.getLocalRestaurants();
+    const fromCache = cached?.find(r => r._id === favouriteId);
+
+    if (fromCache) {
+      // Render immediately from cache — no loading state needed
+      favouriteSlot.innerHTML = RestaurantCard(
+        fromCache,
+        false,   // not active/selected
+        true,    // it is the favourite
+        false,   // no nearest tag
+        false    // hide favourite button — already shown as favourite
+      );
+    } else {
+      // ─── Not cached — fetch restaurants ───────────────────────────
+      favouriteSlot.innerHTML = `<p class="profile__no-favorite">Loading...</p>`;
+
+      try {
+        const restaurants = await discovery.init();
+        const found = restaurants?.find(r => r._id === favouriteId);
+
+        favouriteSlot.innerHTML = found
+          ? RestaurantCard(found, false, true, false, false)
+          : `<p class="profile__no-favorite">Favourite restaurant not found.</p>`;
+
+      } catch (err) {
+        favouriteSlot.innerHTML = `<p class="profile__no-favorite">Could not load favourite restaurant.</p>`;
+      }
+    }
+  }
 
   // ─── EDIT MODAL ──────────────────────────────
   function openEditModal() {
@@ -105,6 +144,7 @@ export default async function render(app) {
       </div>
     `);
 
+    // file name preview
     const fileInput = overlay.querySelector("#avatar-input");
     const fileName = overlay.querySelector(".file-upload__name");
 
@@ -149,7 +189,7 @@ export default async function render(app) {
 
       // refresh UI with new data
       await profile.init();
-      await render(app);
+      render(app);
     });
   }
 
@@ -157,9 +197,8 @@ export default async function render(app) {
 
   app.querySelector("#edit-btn").addEventListener("click", openEditModal);
 
-  app.querySelector("#logout-btn").addEventListener("click", async () => {
+  app.querySelector("#logout-btn").addEventListener("click", () => {
     auth.logout();
-    await render(app);
-    window.location.hash = "#/Discovery";
+    render(app); // render handles everything — re-renders the locked view
   });
 }

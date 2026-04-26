@@ -187,21 +187,60 @@
 /* ============================================
    SECTIONS
 ============================================ */
-.profile__preferences,
-.profile__favorites {
+.profile__favorite {
   padding: var(--space-lg);
 }
 
-.profile__preferences h3,
-.profile__favorites h3 {
+.profile__favorite h3 {
   margin-bottom: var(--space-md);
 }
 
 /* ============================================
-   RESPONSIVE (IMPROVED)
+   FAVOURITE SECTION
+============================================ */
+.profile__favorite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+.profile__favorite h3 {
+  font-size: 16px;
+  font-family: var(--font-headline);
+  color: var(--color-text);
+}
+
+/* Empty / loading state */
+.profile__no-favorite {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  padding: var(--space-md);
+  background: var(--color-surface-low);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+/* ─── Favourite card — reuses RestaurantCard styles ───────────────── */
+/* Disable card-level interactions — it's display only in profile     */
+
+#favorite-slot .restaurant-card {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Re-enable interactive buttons */
+#favorite-slot .btn--route,
+#favorite-slot .btn-menu {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ============================================
+   RESPONSIVE 
 ============================================ */
 @media (max-width: 650px) {
-  .profile {
+  .profile__favorite {
     padding: var(--space-md);
   }
 
