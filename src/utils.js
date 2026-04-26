@@ -51,3 +51,44 @@ export function sortRestaurantsByDistance(restaurants, lat, lng) {
     );
   });
 }
+
+// ─────────────────────────────────────────────
+// isMobile
+// ─────────────────────────────────────────────
+/**
+ * Returns true if the viewport width is below the mobile breakpoint.
+ */
+export function isMobile(breakpoint = 650) {
+  return window.innerWidth < breakpoint;
+}
+
+// ─────────────────────────────────────────────
+// FILTERING
+// ─────────────────────────────────────────────
+/**
+ * Returns a filtered copy of a restaurant array based on the given filter state.
+ * Preserves the input array order — sorting is the caller's responsibility.
+ * Pure — does not mutate the input array.
+ */
+export function filterRestaurants(restaurants, filters, favorites) {
+  let res = [...restaurants];
+
+  if (filters.search) {
+    const q = filters.search.toLowerCase();
+    res = res.filter(r => r.name.toLowerCase().includes(q));
+  }
+
+  if (filters.city) {
+    res = res.filter(r => r.city === filters.city);
+  }
+
+  if (filters.company) {
+    res = res.filter(r => r.company === filters.company);
+  }
+
+  if (filters.favorites) {
+    res = res.filter(r => favorites.includes(r._id));
+  }
+
+  return res;
+}
