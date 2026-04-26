@@ -144,16 +144,18 @@ window.addEventListener("resize", applyToggle);
    * First item is always the nearest restaurant that passes the active filters.
    */
   function renderList() {
-    const data = filterRestaurants(sortedRestaurants, filters, favorites);
+  const data = filterRestaurants(sortedRestaurants, filters, favorites);
+  const isLoggedIn = !!auth.getToken(); // ── fresh check on every render
 
-    list.innerHTML = data.length
-      ? data.map((r, i) => RestaurantCard(
-          r,
-          r._id === activeId,
-          favorites.includes(r._id),
-          i === 0 // first item after filtering is always the nearest
-        )).join("")
-      : `<p class="list-empty">No restaurants found.</p>`;
+  list.innerHTML = data.length
+    ? data.map((r, i) => RestaurantCard(
+      r,
+      r._id === activeId,
+      favorites.includes(r._id),
+      i === 0,
+      isLoggedIn 
+    )).join("")
+    : `<p class="list-empty">No restaurants found.</p>`;
   }
 
   // ─── Menu modal helper ────────────────────────────────────────────────────

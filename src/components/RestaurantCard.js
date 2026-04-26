@@ -15,8 +15,9 @@
  * } [nearest=false] - Whether to show the "NEAREST" tag (always the first card).
  *  HTML string for the restaurant card.
  */
-export function RestaurantCard(r, active, favorited, nearest = false) {
+export function RestaurantCard(r, active, favorited, nearest = false, isLoggedIn = false) {
   const [lng, lat] = r.location.coordinates;
+
   return `
     <div class="restaurant-card ${active ? "active" : ""}" data-id="${r._id}">
 
@@ -24,9 +25,15 @@ export function RestaurantCard(r, active, favorited, nearest = false) {
 
       <div class="card-top">
         <div class="card-title">${r.name}</div>
-        <button class="favorite-btn ${favorited ? "active" : ""}" data-fav="${r._id}" title="Save to favorites">
-          ${favorited ? "&#10084;&#65039;" : "&#129293;"}
-        </button>
+
+        ${
+          isLoggedIn
+            ? `<button class="favorite-btn ${favorited ? "active" : ""}" data-fav="${r._id}" title="Save to favorites">
+                ${favorited ? "&#10084;&#65039;" : "&#129293;"}
+              </button>`
+            : ""
+        }
+
       </div>
 
       <div class="card-company">

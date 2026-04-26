@@ -38,7 +38,7 @@ export function SearchBox(restaurants) {
         </select>
 
         <button class="filter-favorites" id="filter-fav">
-          &#10084; Favorites
+          &#10084; Favorite
         </button>
       </div>
 
