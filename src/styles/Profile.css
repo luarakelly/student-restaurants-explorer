@@ -11,25 +11,39 @@
 }
 
 /* ============================================
+   NOT LOGGED IN STATE (FIXED)
+============================================ */
+.profile--locked {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+}
+
+.profile--locked h2 {
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+/* ============================================
    HEADER
 ============================================ */
 .profile__header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-lg);
   background: var(--color-surface-low);
   padding: var(--space-lg);
   border-radius: var(--radius-lg);
+  position: relative;
 }
 
 /* Avatar */
-.profile__avatar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
 .profile__avatar img {
   width: 96px;
   height: 96px;
@@ -46,34 +60,136 @@
   flex: 1;
 }
 
-.profile__info input {
+/* Username/email */
+.profile__info h2 {
+  font-size: 18px;
+}
+
+.profile__info p {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* ============================================
+   HEADER ACTIONS
+============================================ */
+.profile__actions {
+  display: flex;
+  gap: var(--space-sm);
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  align-items: center;
+}
+
+/* Logout always visible top-right */
+.profile__logout {
+  white-space: nowrap;
+}
+
+
+.profile__logout:hover {
+  background: var(--color-surface-mid);
+  color: var(--color-text);
+}
+
+/* Edit button */
+#edit-btn {
+  align-self: flex-start;
+  width: auto;
+  max-width: 140px;
+}
+
+/* ============================================
+   INPUTS 
+============================================ */
+/* Form layout inside modal */
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+/* Each input group */
+.modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal__field label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.profile__info input,
+.modal input {
   padding: 10px 12px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   font-family: var(--font-body);
   font-size: 14px;
   background: var(--color-bg-elevated);
+  outline: none;
+  transition: 0.2s;
 }
 
-.profile__info input:disabled {
-  background: var(--color-surface-mid);
+.profile__info input:focus,
+.modal input:focus {
+  border-color: var(--color-primary-soft);
+  box-shadow: 0 0 0 2px rgba(201, 79, 0, 0.15);
+}
+
+/* Password placeholder styling */
+.modal input::placeholder {
   color: var(--color-text-muted);
-  cursor: not-allowed;
 }
 
-/* Actions */
-.profile__actions {
-  margin-top: var(--space-sm);
+/* wrapper */
+.file-upload {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
+/* hide default input */
+.file-upload input[type="file"] {
+  display: none;
+}
+
+/* custom button */
+.file-upload__btn {
+  background: #ff9c1bb6;
+  color: white;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* filename display */
+.file-upload__name {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 /* ============================================
    SECTIONS
 ============================================ */
 .profile__preferences,
 .profile__favorites {
-  background: var(--color-surface-low);
   padding: var(--space-lg);
-  border-radius: var(--radius-lg);
 }
 
 .profile__preferences h3,
@@ -81,62 +197,8 @@
   margin-bottom: var(--space-md);
 }
 
-/* Preferences */
-.profile__preferences label {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
-  cursor: pointer;
-}
-
-.profile__preferences input {
-  accent-color: var(--color-primary-soft);
-}
-
 /* ============================================
-   FAVORITES
-============================================ */
-.favorites-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.favorite-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-soft);
-}
-
-.favorite-card:hover {
-  background: var(--color-surface-mid);
-}
-
-.favorite-card button {
-  border: none;
-  background: transparent;
-  color: var(--color-primary);
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.favorite-card button:hover {
-  text-decoration: underline;
-}
-
-.favorites-list p {
-  color: var(--color-text-muted);
-  font-size: 13px;
-}
-
-/* ============================================
-   RESPONSIVE
+   RESPONSIVE (IMPROVED)
 ============================================ */
 @media (max-width: 650px) {
   .profile {
@@ -148,8 +210,9 @@
     align-items: flex-start;
   }
 
-  .profile__avatar {
-    flex-direction: row;
+  .profile__logout {
+    position: static;
+    align-self: flex-end;
   }
 
   .profile__avatar img {
@@ -157,7 +220,8 @@
     height: 72px;
   }
 
-  .profile__info {
+  #edit-btn {
     width: 100%;
+    max-width: none;
   }
 }

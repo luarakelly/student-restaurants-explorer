@@ -135,6 +135,23 @@ a {
   background: #005959;
 }
 
+.btn--small {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.btn--ghost:hover {
+  background: var(--color-surface-mid);
+  color: var(--color-text);
+}
+
 /* ============================================
    APP SHELL
 ============================================ */
