@@ -6,12 +6,11 @@ import Login from "../components/Login.js";
 export default async function render(app) {
   const IMG_PATH = "https://media2.edu.metropolia.fi/restaurant/uploads/";
 
-  const user = profile.getLocalUser();
+  // always fresh user per render
+  let user = profile.getLocalUser();
 
   // ─── NOT LOGGED IN ─────────────────────────────
   if (!user) {
-    Login();
-
     app.innerHTML = `
       <div class="profile--locked">
         <h2>Please log in to view your profile</h2>
@@ -19,7 +18,12 @@ export default async function render(app) {
       </div>
     `;
 
-    app.querySelector("#login-btn").addEventListener("click", Login);
+    app.querySelector("#login-btn").addEventListener("click", () => {
+      Login(async () => {
+        await render(app);
+        window.location.hash = "#/profile"; 
+      });
+    });
     return;
   }
 
@@ -30,18 +34,17 @@ export default async function render(app) {
       <section class="profile__header">
 
         <div class="profile__avatar">
-          <img id="avatar" src="${IMG_PATH + user.avatar}" />
+          <img src="${IMG_PATH + user.avatar}" />
         </div>
 
         <div class="profile__info">
-          <button id="logout-btn" class="profile__logout">
-            Logout
-          </button>
+          <h2>${user.username}</h2>
+          <p>${user.email}</p>
+        </div>
 
-          <h2 id="username">${user.username}</h2>
-          <p id="email">${user.email}</p>
-
-          <button id="edit-btn">Edit Profile</button>
+        <div class="profile__actions">
+          <button id="edit-btn" class="btn btn--secondary btn--small">Edit</button>
+          <button id="logout-btn" class="btn btn--ghost btn--small profile__logout">Logout</button>
         </div>
 
       </section>
@@ -61,37 +64,54 @@ export default async function render(app) {
 
   // ─── EDIT MODAL ──────────────────────────────
   function openEditModal() {
+    const currentUser = profile.getLocalUser();
+
     const overlay = openModal(`
       ${ModalHeader("Edit Profile", "Update your account")}
 
-      <div class="edit-avatar">
-        <input id="avatar-input" type="file" accept="image/*" />
+      <div class="modal__form">
+
+        <div class="modal__field">
+          <label>Avatar</label>
+          <div class="file-upload">
+            <input id="avatar-input" type="file" accept="image/*" />
+            <label for="avatar-input" class="file-upload__btn">
+              Choose image
+            </label>
+            <span class="file-upload__name">No file selected</span>
+          </div>
+        </div>
+
+        <div class="modal__field">
+          <label>Username</label>
+          <input id="username" value="${currentUser.username}" />
+        </div>
+
+        <div class="modal__field">
+          <label>Email</label>
+          <input id="email" value="${currentUser.email}" />
+        </div>
+
+        <div class="modal__field">
+          <label>Password</label>
+          <input id="password" type="password" placeholder="New password" />
+        </div>
+
+        <button id="save" class="btn btn--primary btn--full">
+          Save Changes
+        </button>
+
       </div>
-
-      <input id="username" value="${user.username}" />
-      <input id="email" value="${user.email}" />
-      <input id="password" type="password" placeholder="New password" />
-
-      <button id="save">Save</button>
     `);
   }
 
   // ─── EVENTS ────────────────────────────────
 
-  // Edit profile
   app.querySelector("#edit-btn").addEventListener("click", openEditModal);
 
-  // Logout
-  app.querySelector("#logout-btn").addEventListener("click", () => {
+  app.querySelector("#logout-btn").addEventListener("click", async () => {
     auth.logout();
-
-    app.innerHTML = `
-      <div class="profile--locked">
-        <h2>You have been logged out</h2>
-        <button id="login-btn" class="btn btn--primary">Login</button>
-      </div>
-    `;
-
-    app.querySelector("#login-btn").addEventListener("click", Login);
+    await render(app);
+    window.location.hash = "#/Discovery";
   });
 }
