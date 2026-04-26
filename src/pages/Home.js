@@ -3,6 +3,7 @@
  */
 
 import Login from "../components/Login.js";
+import profile from "../controllers/profileController.js";
 
 /**
  * Renders the Home landing page into the app root element.
