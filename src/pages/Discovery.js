@@ -166,35 +166,45 @@ window.addEventListener("resize", applyToggle);
    * Weekly menu is fetched lazily inside bindMenuCardTabs on tab click.
    */
   async function openMenuFor(id) {
-    const restaurant = restaurants.find(r => r._id === id);
+  const restaurant = restaurants.find(r => r._id === id);
 
-    // Show loading state in modal while daily menu fetches
-    const overlay = openModal(
+  // Show loading state in modal while daily menu fetches
+  const overlay = openModal(
+    ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
+    `<p class="menu-loading">Loading menu...</p>`
+  );
+
+  try {
+    // Fetch daily menu immediately
+    const daily = await discovery.getDailyMenu(id);
+
+    // Replace loading state with real menu content
+    overlay.querySelector(".modal__content").innerHTML =
       ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
-      `<p class="menu-loading">Loading menu...</p>`
+      MenuCard(restaurant, daily);
+
+    // ─── Re-bind close button after content replacement ───────────────
+    overlay.querySelector(".menu-modal__close")?.addEventListener("click", () => {
+      overlay.remove();
+    });
+
+    // Bind tabs — weekly is fetched lazily on tab click
+    bindMenuCardTabs(
+      overlay,
+      restaurant._id,
+      daily,
+      () => discovery.getWeeklyMenu(id)
     );
 
-    try {
-      // Fetch daily menu immediately
-      const daily = await discovery.getDailyMenu(id);
+  } catch (err) {
+    overlay.querySelector(".modal__content").innerHTML =
+      ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
+      `<p class="menu-empty">Failed to load menu.</p>`;
 
-      // Replace loading state with real menu content
-      overlay.querySelector(".modal__content").innerHTML =
-        ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
-        MenuCard(restaurant, daily);
-
-      // Bind tabs — weekly is fetched lazily on tab click
-      bindMenuCardTabs(
-        overlay,
-        restaurant._id,
-        daily,
-        () => discovery.getWeeklyMenu(id)
-      );
-
-    } catch (err) {
-      overlay.querySelector(".modal__content").innerHTML =
-        ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
-        `<p class="menu-empty">Failed to load menu.</p>`;
+      // ─── Re-bind close button on error state too ──────────────────────
+      overlay.querySelector(".menu-modal__close")?.addEventListener("click", () => {
+        overlay.remove();
+      });
     }
   }
 
