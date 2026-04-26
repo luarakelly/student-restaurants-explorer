@@ -5,6 +5,8 @@
  */
 
 import discovery from "../controllers/discoveryController.js";
+import auth from "../controllers/authController.js";
+import { sortRestaurantsByDistance, filterRestaurants, isMobile } from "../utils.js";
 
 import { SearchBox, bindSearchFiltersEvent } from "../components/SearchBox.js";
 import { openModal, ModalHeader } from "../components/Modal.js";
@@ -28,8 +30,27 @@ export default async function render(app) {
 
   /** The _id of the currently selected restaurant card. */
   let activeId = null;
-  /** Set of favorited restaurant _ids. */
-  let favorites = [];
+
+  /**
+   * Base restaurant array — always sorted by distance once location is known.
+   * filterRestaurants() always reads from this array so distance order is
+   * preserved even when filters are applied.
+   *
+   * Starts as a copy of the raw API array.
+   * Replaced by sortRestaurantsByDistance() once geolocation resolves.
+   *
+   */
+  let sortedRestaurants = [...restaurants];
+
+  /**
+   * Array of favorited restaurant _ids.
+   * Pre-populated from the user's saved favouriteRestaurant on the API.
+   * The API supports one favourite at a time — stored as an array to keep
+   * the UI flexible for future multi-favourite support.
+   */
+  const favouriteId = discovery.getLocalFavourite();
+  let favorites = favouriteId ? [favouriteId] : [];
+
   /** Whether the mobile map view is active. */
   let showMap = false;
 
@@ -75,96 +96,63 @@ export default async function render(app) {
 
   header.innerHTML = SearchBox(restaurants);
 
-  // ─── Toggle ───────────────────────────────────────────────────────────────
-  function isMobile() {
-    return window.innerWidth < 650;
+ // ─── Toggle ───────────────────────────────────────────────────────────────
+
+/**
+ * Switches between list and map view on mobile by toggling a CSS class
+ * on the discovery container. CSS handles all visibility.
+ * On desktop the map always stays in .content — class has no effect.
+ */
+function applyToggle() {
+  const discoveryEl = app.querySelector(".discovery");
+
+  if (!isMobile()) {
+    // ─── Desktop — always show list, mount map to desktop slot ───────
+    showMap = false;
+    discoveryEl.classList.remove("discovery--map");
+
+    if (mapInstance) {
+      mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
+    }
+    return;
   }
 
-  /**
-   * Switches between list and map view on mobile by moving the single map
-   * instance between the mobile and desktop slots.
-   * 
-   * TODO use CSS for styles
-   */
-  function applyToggle() {
-    if (!isMobile()) {
-      showMap = false;
+  // ─── Mobile — toggle class and update button label ────────────────
+  discoveryEl.classList.toggle("discovery--map", showMap);
+  toggleBtn.innerHTML = showMap ? "&#128203; List" : "&#128506; Map";
 
-      list.style.display = "";
-      mapMobileWrap.style.display = "none";
-      toggleBtn.style.display = "none";
+  if (!mapInstance) return;
 
-      if (mapInstance) {
-        mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
-      }
-
-      return;
-    }
-
-    // Mobile behavior TODO: Move to CSS file
-    toggleBtn.style.display = "block";
-
-    list.style.display = showMap ? "none" : "";
-    mapMobileWrap.style.display = showMap ? "flex" : "none";
-    toggleBtn.innerHTML = showMap ? "&#128203; List" : "&#128506; Map";
-
-    if (!mapInstance) return;
-
-    if (showMap) {
-      mapInstance.mountTo(mapMobileWrap.querySelector("#map-slot"));
-    } else {
-      mapInstance.mountTo(document.querySelector("#map-slot"));
-    }
+  if (showMap) {
+    mapInstance.mountTo(mapMobileWrap.querySelector("#map-slot"));
+  } else {
+    mapInstance.mountTo(desktopContent.querySelector("#map-slot")); // ← was document.querySelector which could grab the wrong slot
   }
+}
 
-  toggleBtn.addEventListener("click", () => {
-    showMap = !showMap;
-    applyToggle();
-  });
+toggleBtn.addEventListener("click", () => {
+  showMap = !showMap;
+  applyToggle();
+});
 
-  window.addEventListener("resize", applyToggle);
-
-  // ─── Filtering ────────────────────────────────────────────────────────────
-
-  /**
-   * Returns a filtered copy of the restaurants array based on current filter state.
-   * Pure — reads filters and favorites but does not mutate them.
-   */
-  function filterRestaurants() {
-    let res = [...restaurants];
-
-    if (filters.search) {
-      const q = filters.search.toLowerCase();
-      res = res.filter(r => r.name.toLowerCase().includes(q));
-    }
-
-    if (filters.city) {
-      res = res.filter(r => r.city === filters.city);
-    }
-
-    if (filters.company) {
-      res = res.filter(r => r.company === filters.company);
-    }
-
-    if (filters.favorites) {
-      res = res.filter(r => favorites.has(r._id));
-    }
-
-    return res;
-  }
+window.addEventListener("resize", applyToggle);
 
   // ─── Render list ──────────────────────────────────────────────────────────
 
   /**
    * Re-renders the restaurant list based on current filter and favorite state.
-   * The first card in the filtered result always receives the "NEAREST" tag —
-   * TODO: implement distance sorting (from closest to furthers) for restaurants list.
+   * First item is always the nearest restaurant that passes the active filters.
    */
   function renderList() {
-    const data = filterRestaurants();
+    const data = filterRestaurants(sortedRestaurants, filters, favorites);
 
     list.innerHTML = data.length
-      ? data.map((r, i) => RestaurantCard(r, r._id === activeId, favorites.has(r._id), i === 0)).join("")
+      ? data.map((r, i) => RestaurantCard(
+          r,
+          r._id === activeId,
+          favorites.includes(r._id),
+          i === 0 // first item after filtering is always the nearest
+        )).join("")
       : `<p class="list-empty">No restaurants found.</p>`;
   }
 
@@ -174,9 +162,6 @@ export default async function render(app) {
    * Opens the menu modal for a given restaurant id.
    * Fetches the daily menu from the API, then renders the modal.
    * Weekly menu is fetched lazily inside bindMenuCardTabs on tab click.
-   * Shared by both the list card and the map popup.
-   *
-   * id - The restaurant _id.
    */
   async function openMenuFor(id) {
     const restaurant = restaurants.find(r => r._id === id);
@@ -201,7 +186,7 @@ export default async function render(app) {
         overlay,
         restaurant._id,
         daily,
-        () => discovery.getWeeklyMenu(id) // passed as a function, called only when weekly tab is clicked
+        () => discovery.getWeeklyMenu(id)
       );
 
     } catch (err) {
@@ -221,9 +206,40 @@ export default async function render(app) {
       renderList();
     },
 
-    /** id - The _id of the restaurant to toggle. */
-    onFavorite: (id) => {
-      favorites.has(id) ? favorites.delete(id) : favorites.add(id);
+    /**
+     * Toggle favourite for a restaurant.
+     * API supports only one favourite at a time — selecting a new one
+     * replaces the previous. If logged in, persists to API.
+     * If not logged in, favourite is session-only (resets on reload).
+     */
+    onFavorite: async (id) => {
+      if (favorites.includes(id)) {
+        // ─── Remove favourite ──────────────────────
+        favorites = favorites.filter(fav => fav !== id);
+
+        // If logged in, clear favourite on API by sending empty string
+        if (auth.getToken()) {
+          try {
+            await discovery.saveFavourite("");
+          } catch (err) {
+            console.error("Failed to clear favourite:", err);
+          }
+        }
+      } else {
+        // ─── Set new favourite ─────────────────────
+        // API supports only one favourite — replace existing
+        favorites = [id];
+
+        // If logged in, persist to API
+        if (auth.getToken()) {
+          try {
+            await discovery.saveFavourite(id);
+          } catch (err) {
+            console.error("Failed to save favourite:", err);
+          }
+        }
+      }
+
       renderList();
     },
 
@@ -255,10 +271,29 @@ export default async function render(app) {
           applyToggle();
         }
       },
-      onMenu: (id) => openMenuFor(id)
+
+      onMenu: (id) => openMenuFor(id),
+
+      // ─── Re-sort base array by distance once user location is known ───
+      // restaurants stays as the original API array for map markers.
+      // sortedRestaurants is replaced with the distance-sorted version
+      // so filterRestaurants always preserves nearest-first order.
+      onLocationFound: ({ lat, lng }) => {
+        console.log("User location:", lat, lng); 
+        sortedRestaurants = sortRestaurantsByDistance(restaurants, lat, lng);
+        console.log("Sorted order:", sortedRestaurants.map(r => r.name)); 
+
+        // Update the map marker icons to reflect the new nearest restaurant
+        if (sortedRestaurants.length > 0) {
+          mapInstance.updateNearestMarker(sortedRestaurants[0]._id);
+        }
+
+        renderList();
+      }
+      
     });
 
-    // Default mount: TODO verify screen size to define mount.
+    // Default mount: desktop slot.
     mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
 
     // Now safe to apply the initial toggle state.
