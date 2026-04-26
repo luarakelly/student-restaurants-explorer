@@ -2,8 +2,7 @@
  * Renders the search box and filter controls HTML.
  * Derives city and company options dynamically from the restaurants data.
  *
- * @param {Array<object>} restaurants - The full list of restaurant objects.
- * @returns {string} HTML string for the search and filter UI.
+ * restaurants - The full list of restaurant objects.
  */
 export function SearchBox(restaurants) {
   const cities = [...new Set(restaurants.map(r => r.city))];
@@ -52,12 +51,11 @@ export function SearchBox(restaurants) {
  * Calls onChange immediately with the initial filter state,
  * then again whenever any filter value changes.
  *
- * @param {HTMLElement} app - The root app element to query controls from.
- * @param {function(filters: object): void} onChange - Callback invoked with the current filter state.
- * @param {string}  onChange.filters.search    - The current search query.
- * @param {string}  onChange.filters.city      - The selected city, or "" for all.
- * @param {string}  onChange.filters.company   - The selected company, or "" for all.
- * @param {boolean} onChange.filters.favorites - Whether to show favorites only.
+ * onChange - Callback invoked with the current filter state.
+ * onChange.filters.search    - The current search query.
+ * onChange.filters.city      - The selected city, or "" for all.
+ * onChange.filters.company   - The selected company, or "" for all.
+ * onChange.filters.favorites - Whether to show favorites only.
  */
 export function bindSearchFiltersEvent(app, onChange) {
   const searchEl = app.querySelector("#search");

@@ -38,11 +38,11 @@ export function MapPanel() {
  * Moving a DOM node does not destroy it — markers, zoom level, and open
  * popups all survive. invalidateSize() corrects tile rendering after each move.
  *
- * @param {object[]} restaurants                               - Array of restaurant objects.
- * @param {object}   handlers                                  - Event handler callbacks.
- * @param {function(id: string): void} handlers.onMarkerClick  - Called with restaurant _id when a marker is clicked.
- * @param {function(id: string): void} handlers.onMenu         - Called when "View Menu" is clicked in a popup.
- * @returns {{ mountTo: function(HTMLElement): void }} Object with mountTo method.
+ * restaurants             - Array of restaurant objects.
+ * handlers                - Event handler callbacks.
+ * handlers.onMarkerClick  - Called with restaurant _id when a marker is clicked.
+ * handlers.onMenu         - Called when "View Menu" is clicked in a popup.
+ * Object with mountTo method.
  */
 export function bindMapPanel(restaurants, { onMarkerClick, onMenu }) {
   // Create the map node independently — not tied to any layout slot yet.
@@ -109,7 +109,7 @@ export function bindMapPanel(restaurants, { onMarkerClick, onMenu }) {
      * Moves the map DOM node into a new parent container and tells
      * Leaflet to remeasure its size.
      *
-     * @param {HTMLElement} container - The element to move the map into.
+     * container - The element to move the map into.
      */
     mountTo(container) {
       container.appendChild(mapEl);
