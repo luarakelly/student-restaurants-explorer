@@ -4,6 +4,8 @@ import { openModal, ModalHeader } from "../components/Modal.js";
 import Login from "../components/Login.js";
 
 export default async function render(app) {
+  const IMG_PATH = "https://media2.edu.metropolia.fi/restaurant/uploads/";
+
   const user = profile.getLocalUser();
 
   // ─── NOT LOGGED IN ─────────────────────────────
@@ -28,7 +30,7 @@ export default async function render(app) {
       <section class="profile__header">
 
         <div class="profile__avatar">
-          <img id="avatar" src="${user.avatar}" />
+          <img id="avatar" src="${IMG_PATH + user.avatar}" />
         </div>
 
         <div class="profile__info">
@@ -57,7 +59,27 @@ export default async function render(app) {
     </div>
   `;
 
+  // ─── EDIT MODAL ──────────────────────────────
+  function openEditModal() {
+    const overlay = openModal(`
+      ${ModalHeader("Edit Profile", "Update your account")}
+
+      <div class="edit-avatar">
+        <input id="avatar-input" type="file" accept="image/*" />
+      </div>
+
+      <input id="username" value="${user.username}" />
+      <input id="email" value="${user.email}" />
+      <input id="password" type="password" placeholder="New password" />
+
+      <button id="save">Save</button>
+    `);
+  }
+
   // ─── EVENTS ────────────────────────────────
+
+  // Edit profile
+  app.querySelector("#edit-btn").addEventListener("click", openEditModal);
 
   // Logout
   app.querySelector("#logout-btn").addEventListener("click", () => {
