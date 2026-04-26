@@ -93,3 +93,19 @@
 .hidden {
   display: none !important;
 }
+
+@media (max-width: 600px) {
+  .auth {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .auth__tab {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .auth__form input {
+    font-size: 14px;
+  }
+}
