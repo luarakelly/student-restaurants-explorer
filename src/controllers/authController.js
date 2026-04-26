@@ -10,6 +10,7 @@ import {
   loginRequest,
   registerRequest
 } from "../services/authService.js";
+import profile from "./profileController.js";
 
 const TOKEN_KEY = "token";
 
@@ -29,6 +30,7 @@ function authController() {
     if (token) {
       localStorage.setItem(TOKEN_KEY, token);
       console.log("TOKEN FROM LOCAL STORAGE:", getToken());
+      console.log("USER FROM LOCAL STORAGE:", localStorage.getItem("user"));
     } else {
       localStorage.removeItem(TOKEN_KEY);
     }
@@ -57,8 +59,11 @@ function authController() {
   // LOGOUT
   // ─────────────────────────────────────────────
   function logout() {
+    localStorage.removeItem("user");
     setToken(null);
+
     console.log("TOKEN FROM LOCAL STORAGE:", getToken());
+    console.log("USER FROM LOCAL STORAGE:", localStorage.getItem("user"));
   }
 
   return {
