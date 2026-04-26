@@ -23,14 +23,13 @@ Users can browse **anonymously** or **create an account** for a more personalize
 - 🗺️ Explore restaurants on an interactive map
 - 🔍 Filter restaurants by city, provider, and more
 - ℹ️ View detailed restaurant information
+- 📍 Automatically detect and highlight the nearest restaurant
 
 ### 🔐 For Registered Users
 
-- ⭐ Save favorite restaurants
-- 👤 Manage personal profile and preferences
+- ⭐ Save favorite restaurant
+- 👤 Manage personal profile
 - 🖼️ Upload and update profile picture
-- 🧭 Get routes to restaurants via map navigation
-- 📍 Automatically detect and highlight the nearest restaurant
 
 ---
 
@@ -55,7 +54,7 @@ src/
 |--------|-------------|
 | **Client-side routing** | Navigation without full page reloads |
 | **Separation of concerns** | Clean split between views, services, and utilities |
-| **Local storage** | Persistent preferences and session handling |
+| **Local storage** | Persistent session handling |
 | **Geolocation** | Nearest restaurant detection based on user position |
 | **Reusable components** | Clean and modular UI building blocks |
 
