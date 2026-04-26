@@ -50,16 +50,6 @@ export default async function render(app) {
 
       </section>
 
-      <section class="profile__preferences">
-        <h3>Preferences</h3>
-        <p id="prefs-text">No preferences selected</p>
-      </section>
-
-      <section class="profile__favorites">
-        <h3>Favorites</h3>
-        <div id="favorites-list"></div>
-      </section>
-
     </div>
   `;
 

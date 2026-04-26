@@ -184,18 +184,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* ============================================
-   SECTIONS
-============================================ */
-.profile__preferences,
-.profile__favorites {
-  padding: var(--space-lg);
-}
-
-.profile__preferences h3,
-.profile__favorites h3 {
-  margin-bottom: var(--space-md);
-}
 
 /* ============================================
    RESPONSIVE (IMPROVED)
