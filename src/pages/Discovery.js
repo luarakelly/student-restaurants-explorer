@@ -1,12 +1,10 @@
 /**
- * @fileoverview Discovery page — owns all state for the restaurant list,
+ * Discovery page — owns all state for the restaurant list,
  * search filters, and map. Composes SearchBox, RestaurantCard, MapPanel,
  * MenuCard and Modal components and wires them together.
  */
 
-import { restaurantsData } from "./mockupData/restaurantsData.js";
-import { dailyMenuData } from "./mockupData/dailyMenuData.js";
-import { weeklyMenusData } from "./mockupData/weeklyMenuData.js";
+import discovery from "../controllers/discoveryController.js";
 
 import { SearchBox, bindSearchFiltersEvent } from "../components/SearchBox.js";
 import { openModal, ModalHeader } from "../components/Modal.js";
@@ -14,29 +12,29 @@ import { MenuCard, bindMenuCardTabs } from "../components/MenuCard.js";
 import { RestaurantCard, bindRestaurantCardEvent } from "../components/RestaurantCard.js";
 import { MapPanel, bindMapPanel } from "../components/MapPanel.js";
 
-/**
- * Renders the Discovery page into the app root element.
- *
- * @param {HTMLElement} app - The root element to render the page into.
- */
-export default function render(app) {
-  const restaurants = restaurantsData;
+export default async function render(app) {
+
+  // ─── Load restaurants ─────────────────────────────────────────────────────
+  // Use cached data if available, otherwise fetch fresh from API.
+
+  let restaurants = discovery.getLocalRestaurants();
+
+  if (!restaurants) {
+    app.innerHTML = `<p class="list-loading">Loading restaurants...</p>`;
+    restaurants = await discovery.init();
+  }
 
   // ─── State ────────────────────────────────────────────────────────────────
 
-  /** @type {string|null} The _id of the currently selected restaurant card. */
+  /** The _id of the currently selected restaurant card. */
   let activeId = null;
-
-  /** @type {Set<string>} Set of favorited restaurant _ids. */
-  let favorites = new Set();
-
-  /** @type {boolean} Whether the mobile map view is active. */
+  /** Set of favorited restaurant _ids. */
+  let favorites = [];
+  /** Whether the mobile map view is active. */
   let showMap = false;
 
   /**
    * Current filter state. Updated by bindSearchFiltersEvent on every change.
-   *
-   * @type {{ search: string, city: string, company: string, favorites: boolean }}
    */
   let filters = {
     search: "",
@@ -81,10 +79,12 @@ export default function render(app) {
   function isMobile() {
     return window.innerWidth < 650;
   }
+
   /**
    * Switches between list and map view on mobile by moving the single map
    * instance between the mobile and desktop slots.
-   * On desktop the map always stays in .content and is unaffected.
+   * 
+   * TODO use CSS for styles
    */
   function applyToggle() {
     if (!isMobile()) {
@@ -101,7 +101,7 @@ export default function render(app) {
       return;
     }
 
-    // Mobile behavior
+    // Mobile behavior TODO: Move to CSS file
     toggleBtn.style.display = "block";
 
     list.style.display = showMap ? "none" : "";
@@ -129,8 +129,6 @@ export default function render(app) {
   /**
    * Returns a filtered copy of the restaurants array based on current filter state.
    * Pure — reads filters and favorites but does not mutate them.
-   *
-   * @returns {Array<object>} Filtered list of restaurant objects.
    */
   function filterRestaurants() {
     let res = [...restaurants];
@@ -155,12 +153,12 @@ export default function render(app) {
     return res;
   }
 
-  // ─── Render ───────────────────────────────────────────────────────────────
+  // ─── Render list ──────────────────────────────────────────────────────────
 
   /**
    * Re-renders the restaurant list based on current filter and favorite state.
    * The first card in the filtered result always receives the "NEAREST" tag —
-   * distance sorting will be implemented later.
+   * TODO: implement distance sorting (from closest to furthers) for restaurants list.
    */
   function renderList() {
     const data = filterRestaurants();
@@ -174,36 +172,62 @@ export default function render(app) {
 
   /**
    * Opens the menu modal for a given restaurant id.
+   * Fetches the daily menu from the API, then renders the modal.
+   * Weekly menu is fetched lazily inside bindMenuCardTabs on tab click.
    * Shared by both the list card and the map popup.
    *
-   * @param {string} id - The restaurant _id.
+   * id - The restaurant _id.
    */
-  function openMenuFor(id) {
+  async function openMenuFor(id) {
     const restaurant = restaurants.find(r => r._id === id);
+
+    // Show loading state in modal while daily menu fetches
     const overlay = openModal(
       ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
-      MenuCard(restaurant, dailyMenuData, weeklyMenusData)
+      `<p class="menu-loading">Loading menu...</p>`
     );
-    bindMenuCardTabs(overlay, restaurant._id, dailyMenuData, weeklyMenusData);
+
+    try {
+      // Fetch daily menu immediately
+      const daily = await discovery.getDailyMenu(id);
+
+      // Replace loading state with real menu content
+      overlay.querySelector(".modal__content").innerHTML =
+        ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
+        MenuCard(restaurant, daily);
+
+      // Bind tabs — weekly is fetched lazily on tab click
+      bindMenuCardTabs(
+        overlay,
+        restaurant._id,
+        daily,
+        () => discovery.getWeeklyMenu(id) // passed as a function, called only when weekly tab is clicked
+      );
+
+    } catch (err) {
+      overlay.querySelector(".modal__content").innerHTML =
+        ModalHeader(restaurant.name, restaurant.address.toUpperCase()) +
+        `<p class="menu-empty">Failed to load menu.</p>`;
+    }
   }
 
   // ─── Event registers ──────────────────────────────────────────────────────
 
   // Delegated once on the list container — no need to re-bind after re-renders.
   bindRestaurantCardEvent(list, {
-    /** @param {string} id - The _id of the clicked restaurant. */
+    /** id - The _id of the clicked restaurant. */
     onSelect: (id) => {
       activeId = id;
       renderList();
     },
 
-    /** @param {string} id - The _id of the restaurant to toggle. */
+    /** id - The _id of the restaurant to toggle. */
     onFavorite: (id) => {
       favorites.has(id) ? favorites.delete(id) : favorites.add(id);
       renderList();
     },
 
-    /** @param {string} id - The _id of the restaurant whose menu was requested. */
+    /** id - The _id of the restaurant whose menu was requested. */
     onMenu: (id) => openMenuFor(id)
   });
 
@@ -234,7 +258,7 @@ export default function render(app) {
       onMenu: (id) => openMenuFor(id)
     });
 
-    // Default mount: desktop slot.
+    // Default mount: TODO verify screen size to define mount.
     mapInstance.mountTo(desktopContent.querySelector("#map-slot"));
 
     // Now safe to apply the initial toggle state.
